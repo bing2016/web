@@ -95,6 +95,43 @@ function waitCallBack(param1, callback) {
 }
 
 
+
+
+
+// function addTweetsToDB() {
+
+// }
+
+// function getTweetsFromDB() {
+
+// }
+
+// function isInDatabase(str, connection) {
+//     var queryString = 'SELECT id FROM tb_keywords WHERE keyword = ?';
+//     connection.query(queryString, [str], 
+//         function(err, rows, fields) {
+//             if (err) throw err;
+//             if (rows.length > 0) {
+//                 rows[0]['id']
+//                 var queryString2 = 'SELECT tweet FROM tb_tweets WHERE key_id = ?'
+//                 connection.query(queryString,  rows[0]['id']);
+//             }
+//         });
+//     connection.end();
+// }
+
+// function createConnectionWithDB() {
+//     var mysql = require('mysql');
+
+//     var connection = mysql.createConnection({
+//         host : '127.0.0.1', port : '3306',
+//         user : 'root', password : '', database : 'web',
+//     });
+
+//     console.log('lets start');
+//     return connection.connect();
+// }
+
 var app = protocol.createServer(function (req, res) {
     var pathname = url.parse(req.url).pathname;
     var body = '';
@@ -106,6 +143,10 @@ var app = protocol.createServer(function (req, res) {
         });
         req.on('end', function () {
             body= JSON.parse(body);
+
+         //   var connection = createConnectionWithDB();
+
+
             var query= body.query;
             //profiles(query);
             client.get('search/tweets', { q: query, count: 10 },
@@ -114,10 +155,20 @@ var app = protocol.createServer(function (req, res) {
                     for (var indx in data.statuses) {
                         var tweet = data.statuses[indx];
                         console.log('on: ' + tweet.created_at + ' : @' + addslashes(tweet.user.screen_name) + ' : ' + addslashes(tweet.text) + '\n\n');
-                        //if (isRecent(tweet.created_at)) tweetCount[gavenDay] += 1;
+                        if (isRecent(tweet.created_at)) tweetCount[gavenDay] += 1;
                     }
                     res.end(JSON.stringify(data));
                 });
+
+
+            res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+            var obj = {'statistics':{}};
+            for(var i in tweetCount) {
+                obj['statistics'][i]=tweetCount[i]; 
+            } 
+            res.end(JSON.stringify(obj));
+
+
 
 
 //            waitCallBack(5000, function () {
