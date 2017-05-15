@@ -73,15 +73,13 @@ function profiles(str) {
 
 }
 
-function isRecent(str) {
+function addRecent(str) {
     var strs= new Array();
     strs=str.split(" ");
     var gavenDay = strs[2] + '.' + monthObject[strs[1]] + '.' + strs[5];
     if (tweetCount.hasOwnProperty(gavenDay)) {
-        return true;
-    } else {
-        return false;
-    }
+        tweetCount[gavenDay] += 1;
+    } 
 }
 
 function waitCallBack(param1, callback) {
@@ -155,7 +153,7 @@ var app = protocol.createServer(function (req, res) {
                     for (var indx in data.statuses) {
                         var tweet = data.statuses[indx];
                         console.log('on: ' + tweet.created_at + ' : @' + addslashes(tweet.user.screen_name) + ' : ' + addslashes(tweet.text) + '\n\n');
-                        if (isRecent(tweet.created_at)) tweetCount[gavenDay] += 1;
+                        addRecent(tweet.created_at)
                     }
                     res.end(JSON.stringify(data));
                 });
