@@ -142,29 +142,30 @@ var app = protocol.createServer(function (req, res) {
         req.on('end', function () {
             body= JSON.parse(body);
 
-         //   var connection = createConnectionWithDB();
-
-
             var query= body.query;
             //profiles(query);
-            client.get('search/tweets', { q: query, count: 10 },
+            client.get('search/tweets', { q: query, count: 3 },
                 function (err, data, response) {
-                    res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
                     for (var indx in data.statuses) {
+                        res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
                         var tweet = data.statuses[indx];
                         console.log('on: ' + tweet.created_at + ' : @' + addslashes(tweet.user.screen_name) + ' : ' + addslashes(tweet.text) + '\n\n');
-                        addRecent(tweet.created_at)
+                        //addRecent(tweet.created_at);
+                        res.end(JSON.stringify(data));
+
                     }
-                    res.end(JSON.stringify(data));
-                });
+                    
+                // res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+                // var obj = {'statistics':{}};
+                // for(var i in tweetCount) {
+                //     obj['statistics'][i]=tweetCount[i]; 
+                // } 
+                // //res.end(JSON.stringify(obj));
+                // //res.end(JSON.stringify(data));
+                // console.log(JSON.stringify(obj));
+            });
 
 
-            res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-            var obj = {'statistics':{}};
-            for(var i in tweetCount) {
-                obj['statistics'][i]=tweetCount[i]; 
-            } 
-            res.end(JSON.stringify(obj));
 
 
 
@@ -175,6 +176,21 @@ var app = protocol.createServer(function (req, res) {
 //                res.end(JSON.stringify(body));
 //            });
 });
+    }
+    else if ((req.method == 'POST') && (pathname == '/postFile11.html')) {
+         req.on('data', function (data) {
+
+            body += data;
+        });
+        req.on('end', function () {
+            body= JSON.parse(body);
+
+            var query= body.query;
+            
+            console.log(JSON.stringify(query));
+                        res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+                        res.end(JSON.stringify(query));
+    });
     }
     else {
         file.serve(req, res, function (err, result) {

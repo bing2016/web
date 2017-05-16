@@ -18,10 +18,9 @@
 	<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:400px;" id="mySidebar"><br>
 		<div class="w3-bar-block">
 			<input id="xxx" class="w3-bar-item w3-button w3-padding w3-text-teal" value="" >
-
-			<div style="width: 50%">
-				<canvas id="myChart" width="100%" height="100%">
-				</canvas>
+			<div class="w3-bar-item">
+				<canvas id="myChart" width="100%" height="80%">
+                </canvas>
 			</div>
 
 		</div>
@@ -37,7 +36,7 @@
 					<input class="w3-input w3-border" type="text" name="query" value="" oninput="change11()"><br>
 					<button class="w3-btn w3-black" id="sendButton">Send Data</button>
 				</form>
-				<p id="lblResponse">fill me in</p>
+				<!-- <p id="lblResponse">fill me in</p> -->
 			</div>
 		</div>
 
@@ -136,7 +135,7 @@
 				//}
 				//else {
 
-					var arr1 = new [day7,day6,day5,day4,day3,day2,day1];
+					var arr1 = [day7,day6,day5,day4,day3,day2,day1];
 					var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
 
 					console.log("xxxx");
@@ -165,13 +164,34 @@
 						});
 					}
 
-				},
-				error: function (xhr, status, error) {
-					console.log('Error: ' + error.message);
-					$('#lblResponse').html('Error connecting to the server.');
-				},
-			});
+			},
+			error: function (xhr, status, error) {
+				console.log('Error: ' + error.message);
+				$('#lblResponse').html('Error connecting to the server.');
+			},
+		});
 		}
+
+		function sendAjaxQuery11(url, data) {
+            $.ajax({
+                    url: 'http://127.0.0.1:3000/postFile11.html',
+                    data: data,
+                    dataType:'json',
+                    type: 'POST',
+//                    timeout: 10000,
+                    success: function (dataR) {
+                        var ret = JSON.stringify(dataR);
+                        alert('Success: '+ ret);
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error: ' + error.message);
+
+                    }
+                });
+
+        }
+
+
 
 
 		$.fn.serializeObject = function () {
@@ -193,6 +213,7 @@
 		function sendData() {
 			var form = document.getElementById('myForm');
 			sendAjaxQuery('http://localhost:3000/', JSON.stringify($('form').serializeObject()));
+			sendAjaxQuery11('http://localhost:3000/', JSON.stringify($('form').serializeObject()));
 		}	
 
 
