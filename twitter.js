@@ -32,19 +32,22 @@ function profiles(query, res) {
             var name = query.substring(1);
             client.get('statuses/user_timeline', { screen_name: name  },
                 function (err, data, response) {
-                    var resObject = {nunberTweets:0, recentNunberTweets:0, geolist:[]};
+                    var resObject = {name:'', icon:'', nunberTweets:0, recentNunberTweets:0, geolist:[]};
                     Statistics.createCalendar();
-                    if (data[index] == null) {
+                    
+                    if (data[0] == null) {
                         res.end()
                     } else {
-                    for (var index in data) {
-                        resObject.nunberTweets += 1;
-                        if (Statistics.isRecent(data[index].created_at)) resObject.recentNunberTweets += 1;
-                        resObject.geolist[index] = data[index].geo;
+                        resObject.name = data[0].user.name;
+                        resObject.icon = data[0].user.profile_image_url;
+                        for (var index in data) {
+                            resObject.nunberTweets += 1;
+                            if (Statistics.isRecent(data[index].created_at)) resObject.recentNunberTweets += 1;
+                            resObject.geolist[index] = data[index].geo;
                     }
 
                     //data.push({statuses:{nunberTweets:nunberTweets, recentNunberTweets:recentNunberTweets}})
-                    console.log(JSON.stringify(data));
+                    //console.log(JSON.stringify(data));
                     console.log(JSON.stringify(resObject));
                     res.end(JSON.stringify(resObject));
               }  });

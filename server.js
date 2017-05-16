@@ -49,11 +49,8 @@ var app = protocol.createServer(function (req, res) {
         });
         req.on('end', function () {
             body= JSON.parse(body);
-
             var query= body.query;
-
             Twitter.profiles(query, res);
-
         });
     }
     else {
