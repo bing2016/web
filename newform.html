@@ -5,24 +5,49 @@
 	<title>Ajax form</title>
 	<link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.js"></script>
+	<script src="Chart.js"></script>
 
 	<style type="text/css">
 		.w3-panel:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
+		.w3-input:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
 	</style>
 
 </head>
 <body>
 
-	<form id="myForm" onsubmit="return false;" >
-		Query:<br>
-		<input class="w3-input" type="text" name="query" value=""><br>
-		<button class="w3-btn w3-black" id="sendButton">Send Data</button>
-	</form>
-	<div class="w3-row">
-		<div class="w3-col s6" style="margin-left: 20%">
-			<div class="" id="TweetList"></div>
+	<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:400px;" id="mySidebar"><br>
+		<div class="w3-bar-block">
+			<input id="xxx" class="w3-bar-item w3-button w3-padding w3-text-teal" value="" >
+
+			<div style="width: 50%">
+				<canvas id="myChart" width="100%" height="100%">
+				</canvas>
+			</div>
+
 		</div>
-	</div>	
+	</nav>
+
+
+
+	<div class="w3-main">
+		<div id="input" class="w3-center" style="margin-top: 15%;margin-left: 28%">
+			<div style="width: 60%" >
+				<form id="myForm" onsubmit="return false;" >
+					<font size="8" face="Lucida Sans Unicode">Query:</font><br>
+					<input class="w3-input w3-border" type="text" name="query" value="" oninput="change11()"><br>
+					<button class="w3-btn w3-black" id="sendButton">Send Data</button>
+				</form>
+				<p id="lblResponse">fill me in</p>
+			</div>
+		</div>
+
+
+		<div class="w3-row">
+			<div class="w3-col s6" style="margin-left: 25%">
+				<div class="" id="TweetList"></div>
+			</div>
+		</div>	
+	</div>
 
 
 	<script type="text/javascript">
@@ -36,23 +61,67 @@
 				success: function (data) {
 					var ret = JSON.stringify(data);
 
+					//if (JSON.parse(ret).statuses != null) {
+
+					//$('#lblResponse').html(ret);
+
 					var twit = JSON.parse(ret).statuses;
 
 					$("#TweetList").empty();
+
+					var monthObject = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12}
+
+					function GetDateStr(AddDayCount) { 
+						var dd = new Date(); 
+						dd.setDate(dd.getDate()+AddDayCount);
+						var y = dd.getFullYear(); 
+						var m = dd.getMonth()+1;
+						var d = dd.getDate(); 
+						return d+"."+m+"."+y; 
+					} 
+
+					var day1 = GetDateStr(0);
+					var day2 = GetDateStr(-1);
+					var day3 = GetDateStr(-2);
+					var day4 = GetDateStr(-3);
+					var day5 = GetDateStr(-4);
+					var day6 = GetDateStr(-5);
+					var day7 = GetDateStr(-6);
+
+					var tweetCount = new Array();
+					tweetCount[day1] = 0;
+					tweetCount[day2] = 0;
+					tweetCount[day3] = 0;
+					tweetCount[day4] = 0;
+					tweetCount[day5] = 0;
+					tweetCount[day6] = 0;
+					tweetCount[day7] = 0;
+
+					function addRecent(str) {
+						var strs= new Array();
+						strs=str.split(" ");
+						var gavenDay = strs[2] + '.' + monthObject[strs[1]] + '.' + strs[5];
+						if (tweetCount.hasOwnProperty(gavenDay)) {
+							tweetCount[gavenDay] += 1;
+						} 
+					}
+
 
 					initTable();
 					function initTable () {
 						var html = '<table border=0>';
 						for(var i=0,l=twit.length;i<l;i++){
 							var obj = twit[i];
+							addRecent(obj.created_at);
+							
 							html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + '/status/' + obj.id_str + ' \')" >'
 							// html += '<p>' + obj.created_at + '</p>';
 
-							html += '<font style="color: black" size="5">Author: </font><a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><img style="height:30px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="5"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
+							html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><font style="color: black" size="5">Author: </font><img style="height:50px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="6"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
 
-							html += '<p><font style="color: black" size="3"> Date: </font><font style="color: grey" size="3">' + obj.created_at + '</font></p>';
+							html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.created_at + '</font></p>';
 
-							html += '<p><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
+							html += '<p style="margin-left:14px"><font style="color: black" size="6"> Tweet: ' + obj.text + '</font></p>'
 
 							// for (var hashtag in obj.entities.hashtags) {
 							// html +='<p>' + obj.entities.hashtags[hashtag].Text + '</p>'
@@ -64,6 +133,38 @@
 
 						$('#TweetList').append(html);
 					}
+				//}
+				//else {
+
+					var arr1 = new [day7,day6,day5,day4,day3,day2,day1];
+					var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
+
+					console.log("xxxx");
+					//$('#lblResponse').html(ret);
+
+					initChart();
+					function initChart() {
+						var ctx = $("#myChart").get(0).getContext("2d");
+
+						var data = {
+							labels: arr1,
+							datasets: [
+							{
+								fillColor: "rgba(220,220,220,0.5)",
+								strokeColor: "rgba(220,220,220,1)",
+								pointColor: "rgba(220,220,220,1)",
+								pointStrokeColor: "#fff",
+								data: arr2
+							},
+							]
+						}
+
+						var myNewChart = new Chart(ctx , {
+							type: "line",
+							data: data, 
+						});
+					}
+
 				},
 				error: function (xhr, status, error) {
 					console.log('Error: ' + error.message);
@@ -99,9 +200,13 @@
 		sendButton.onclick = sendData;
 
 		function openpage(url){
-			//window.location.replace(url);
 			window.open(url);
 		} 
+
+		function change11(){
+			var node = $("#input");
+			node.css("margin-top", "0%");
+		}
 
 	</script>
 
