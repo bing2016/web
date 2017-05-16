@@ -34,6 +34,9 @@ function profiles(query, res) {
                 function (err, data, response) {
                     var resObject = {nunberTweets:0, recentNunberTweets:0, geolist:[]};
                     Statistics.createCalendar();
+                    if (data[index] == null) {
+                        res.end()
+                    } else {
                     for (var index in data) {
                         resObject.nunberTweets += 1;
                         if (Statistics.isRecent(data[index].created_at)) resObject.recentNunberTweets += 1;
@@ -41,8 +44,10 @@ function profiles(query, res) {
                     }
 
                     //data.push({statuses:{nunberTweets:nunberTweets, recentNunberTweets:recentNunberTweets}})
+                    console.log(JSON.stringify(data));
+                    console.log(JSON.stringify(resObject));
                     res.end(JSON.stringify(resObject));
-                });
+              }  });
     } else {
         res.end();
     }
