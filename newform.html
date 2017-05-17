@@ -10,63 +10,92 @@
 	<style type="text/css">
 		.w3-panel:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
 		.w3-input:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
+
+		#overlay {
+			position: absolute;
+			top: 0; right: 0; left: 0; bottom: 0;
+
+			background: rgba(0,0,0,0);
+			background-color: ;
+		}
+
+		body {
+			background-image: url(background1.jpg);
+		}
+
+
 	</style>
 
 </head>
 <body>
 
-	<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:400px;" id="mySidebar"><br>
-		<div class="w3-bar-block">
-			<input id="xxx" class="w3-bar-item w3-button w3-padding w3-text-teal" value="" >
-			<div class="w3-bar-item">
-				<canvas id="myChart" width="100%" height="80%">
-                </canvas>
-			</div>
+	<div class="hm-nw-bnr-vid">
+		<div class="hm-nw-bnr-bk"></div>
+
+		<video autoplay preload="" style="width:100%;opacity: 1" onended="BackGournd_Vedio_Opacity()" id="video">
+			<source src="Video1.mp4">
+			</video>
 
 		</div>
-	</nav>
+
+		
 
 
 
-	<div class="w3-main">
-		<div id="input" class="w3-center" style="margin-top: 15%;margin-left: 28%">
-			<div style="width: 60%" >
-				<form id="myForm" onsubmit="return false;" >
-					<font size="8" face="Lucida Sans Unicode">Query:</font><br>
-					<input class="w3-input w3-border" type="text" name="query" value="" oninput="change11()"><br>
-					<button class="w3-btn w3-black" id="sendButton">Send Data</button>
-				</form>
-				<!-- <p id="lblResponse">fill me in</p> -->
+		<div class="w3-main" style="" id="overlay">
+
+			<div class="w3-row">
+
+				<div class="w3-col m9">
+					<div id="input" class="w3-center" style="width: 80%;margin-top: 28%;margin-left: 28%">
+						<div style="width: 100%" >
+							<form id="myForm" onsubmit="return false;" >
+								<font size="8" face="Lucida Sans Unicode" color="white">Query:</font><br>
+								<input id="input" class="w3-input w3-border" type="text" name="query" value="" oninput="Input_Position()"><br>
+								<button class="w3-btn w3-black" id="Query_Tweets_Button">Search Tweets</button>
+								<button class="w3-btn w3-black" id="Query_Author_Button">By @Author</button>
+							</form>
+							<!-- <p id="lblResponse">fill me in</p> -->
+						</div>
+					</div>
+					<div class="">
+						<div class="" style="margin-left: 10%;width: 80% ">
+							<div class="" id="TweetList"></div>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="w3-col m3">
+					<div id="chart" class=" w3-panel w3-light-grey w3-round w3-border" style="margin-top: 15%;width: 90%;opacity: 0">
+						<canvas id="myChart" width="100%" height="80%">
+						</canvas>
+					</div>
+				</div>
+
+
+
 			</div>
 		</div>
 
 
-		<div class="w3-row">
-			<div class="w3-col s6" style="margin-left: 25%">
-				<div class="" id="TweetList"></div>
-			</div>
-		</div>	
-	</div>
+		<script type="text/javascript">
 
-
-	<script type="text/javascript">
-
-		function sendAjaxQuery(url, data) {
-			$.ajax({
-				url: 'http://127.0.0.1:3000/postFile.html',
-				dataType: "json",
-				data: data,
-				type: 'POST',
-				success: function (data) {
-					var ret = JSON.stringify(data);
+			function Send_Tweets_Query(url, data) {
+				$.ajax({
+					url: 'http://127.0.0.1:3000/' + url,
+					dataType: "json",
+					data: data,
+					type: 'POST',
+					success: function (data) {
+						// console.log("xxx");
+						var ret = JSON.stringify(data);
 
 					//if (JSON.parse(ret).statuses != null) {
 
 					//$('#lblResponse').html(ret);
 
 					var twit = JSON.parse(ret).statuses;
-
-					$("#TweetList").empty();
 
 					var monthObject = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12}
 
@@ -105,6 +134,7 @@
 						} 
 					}
 
+					$("#TweetList").empty();
 
 					initTable();
 					function initTable () {
@@ -116,11 +146,11 @@
 							html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + '/status/' + obj.id_str + ' \')" >'
 							// html += '<p>' + obj.created_at + '</p>';
 
-							html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><font style="color: black" size="5">Author: </font><img style="height:50px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="6"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
+							html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="5"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
 
 							html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.created_at + '</font></p>';
 
-							html += '<p style="margin-left:14px"><font style="color: black" size="6"> Tweet: ' + obj.text + '</font></p>'
+							html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
 
 							// for (var hashtag in obj.entities.hashtags) {
 							// html +='<p>' + obj.entities.hashtags[hashtag].Text + '</p>'
@@ -132,14 +162,9 @@
 
 						$('#TweetList').append(html);
 					}
-				//}
-				//else {
 
 					var arr1 = [day7,day6,day5,day4,day3,day2,day1];
 					var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
-
-					console.log("xxxx");
-					//$('#lblResponse').html(ret);
 
 					initChart();
 					function initChart() {
@@ -162,26 +187,26 @@
 							type: "line",
 							data: data, 
 						});
+
+						Chart_Opacity();
 					}
 
-			},
-			error: function (xhr, status, error) {
-				console.log('Error: ' + error.message);
-				$('#lblResponse').html('Error connecting to the server.');
-			},
-		});
-		}
+				},
+				error: function (xhr, status, error) {
+					console.log('Error: ' + error.message);
+				},
+			});
+			}
 
-		function sendAjaxQuery11(url, data) {
+			function Send_Author_Query(url, data) {
             $.ajax({
-                    url: 'http://127.0.0.1:3000/postFile11.html',
+                    url: 'http://127.0.0.1:3000/' + url,
                     data: data,
                     dataType:'json',
                     type: 'POST',
-//                    timeout: 10000,
                     success: function (dataR) {
                         var ret = JSON.stringify(dataR);
-                        alert('Success: '+ ret);
+                        alert(ret);
                     },
                     error: function (xhr, status, error) {
                         alert('Error: ' + error.message);
@@ -191,45 +216,74 @@
 
         }
 
-
-
-
-		$.fn.serializeObject = function () {
-			var o = {};
-			var a = this.serializeArray();
-			$.each(a, function () {
-				if (o[this.name] !== undefined) {
-					if (!o[this.name].push) {
-						o[this.name] = [o[this.name]];
+			$.fn.serializeObject = function () {
+				var o = {};
+				var a = this.serializeArray();
+				$.each(a, function () {
+					if (o[this.name] !== undefined) {
+						if (!o[this.name].push) {
+							o[this.name] = [o[this.name]];
+						}
+						o[this.name].push(this.value || '');
+					} else {
+						o[this.name] = this.value || '';
 					}
-					o[this.name].push(this.value || '');
-				} else {
-					o[this.name] = this.value || '';
+				});
+				return o;
+			};
+
+			function Query_Tweets() {
+				var form = document.getElementById('myForm');
+				Send_Tweets_Query('postFile.html', JSON.stringify($('form').serializeObject()));
+			}	
+
+			function Query_Author() {
+				var form = document.getElementById('myForm');
+				Send_Author_Query('postFile11.html', JSON.stringify($('form').serializeObject()));
+			}
+
+			function Query_Author_Tips() {
+				var form = document.getElementById('myForm');
+				var Query_Author_Button = $('form').serializeObject().query;
+				var reg = /^@/;
+				var len = Query_Author_Button.length;
+				if (reg.test(Query_Author_Button) && len <= 16) {
+					Query_Author();
 				}
-			});
-			return o;
-		};
+				else{
+					alert("Error: Whoops! You have input wrong format query. \nIt should be @Username ");
+				}
 
-		function sendData() {
-			var form = document.getElementById('myForm');
-			sendAjaxQuery('http://localhost:3000/', JSON.stringify($('form').serializeObject()));
-			sendAjaxQuery11('http://localhost:3000/', JSON.stringify($('form').serializeObject()));
-		}	
+			}
 
+			function openpage(url){
+				window.open(url);
+			} 
 
-		var sendButton = document.getElementById('sendButton');
-		sendButton.onclick = sendData;
+			function Input_Position(){
+				var node = $("#input");
+				node.css("margin-top", "0%");
+				node.css("margin-left", "10%");
 
-		function openpage(url){
-			window.open(url);
-		} 
+			}
 
-		function change11(){
-			var node = $("#input");
-			node.css("margin-top", "0%");
-		}
+			function Chart_Opacity(){
+				var node = $("#chart");
+				node.css("opacity", "1");
 
-	</script>
+			}
 
-</body>
-</html>
+			function BackGournd_Vedio_Opacity() {
+				var node = $("#video");
+				node.css("opacity", "0");
+			}
+
+			var Query_Tweets_Button = document.getElementById('Query_Tweets_Button');
+			Query_Tweets_Button.onclick = Query_Tweets;
+			var Query_Author_Button = document.getElementById('Query_Author_Button');
+			Query_Author_Button.onclick = Query_Author_Tips;
+
+		</script>
+
+	</body>
+	</html>
