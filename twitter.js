@@ -32,23 +32,30 @@ function profiles(query, res) {
             var name = query.substring(1);
             client.get('statuses/user_timeline', { screen_name: name  },
                 function (err, data, response) {
-                    var resObject = {name:'', icon:'', nunberTweets:0, recentNunberTweets:0, geolist:[]};
+                    var resObject = {user:{}, tweets:[]}
+                    resObject.user = {name:'', icon:'', screen_name:'', nunberTweets:0, recentNunberTweets:0, geolist:[]};
+
                     Statistics.createCalendar();
                     
                     if (data[0] == null) {
                         res.end()
                     } else {
-                        resObject.name = data[0].user.name;
-                        resObject.icon = data[0].user.profile_image_url;
+                        resObject.user.name = data[0].user.name;
+                        resObject.user.icon = data[0].user.profile_image_url;
+                        resObject.user.screen_name = data[0].user.profile_image_url;
+                        
                         for (var index in data) {
-                            resObject.nunberTweets += 1;
-                            if (Statistics.isRecent(data[index].created_at)) resObject.recentNunberTweets += 1;
-                            resObject.geolist[index] = data[index].geo;
+                            resObject.user.nunberTweets += 1;
+                            if (Statistics.isRecent(data[index].created_at)) resObject.user.recentNunberTweets += 1;
+                            resObject.user.geolist[index] = data[index].geo;
+
+                            resObject.tweets[index].time = data[0].created_at;
+                            resObject.tweets[index].id = data[0].id_str;
+                            resObject.tweets[index].text = data[0].user.text;
                     }
 
                     //data.push({statuses:{nunberTweets:nunberTweets, recentNunberTweets:recentNunberTweets}})
                     //console.log(JSON.stringify(data));
-                    console.log(JSON.stringify(resObject));
                     res.end(JSON.stringify(resObject));
               }  });
     } else {
