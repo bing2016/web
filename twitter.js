@@ -55,7 +55,7 @@ function getTweets(query, res) {
 function profiles(query, res) { 
     var reg = /^@/;
     var len = query.length
-    res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : 'http://localhost:3000'});
+    res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
 
     if (reg.test(query) && len <= 16) {
             console.log('on: ' + query.substring(1) + '\n\n');
