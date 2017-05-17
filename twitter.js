@@ -79,9 +79,8 @@ function profiles(query, res) {
                             if (Statistics.isRecent(data[index].created_at)) resObject.user.recentNumberTweets += 1;
                             resObject.user.geolist[index] = data[index].geo;
 
-                            resObject.tweets[index].time = data[0].created_at;
-                            resObject.tweets[index].id = data[0].id_str;
-                            resObject.tweets[index].text = data[0].user.text;
+                            var tweet = {time:data[0].created_at, id:data[0].id_str, text:data[0].user.text}
+                            resObject.tweets[index] = tweet;
                     }
 
                     //data.push({statuses:{numberTweets:numberTweets, recentNumberTweets:recentNumberTweets}})
