@@ -82,8 +82,7 @@
 					type: 'POST',
 					success: function (data) {
 						var ret = JSON.stringify(data);
-
-						var twit = JSON.parse(ret).statuses;
+						var twit = JSON.parse(ret);
 
 						var monthObject = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12}
 
@@ -130,13 +129,13 @@
 							var html = '<table border=0>';
 							for(var i=0,l=twit.length;i<l;i++){
 								var obj = twit[i];
-								addRecent(obj.created_at);
+								addRecent(obj.time);
 
-								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + '/status/' + obj.id_str + ' \')" style="overflow:hidden">'
+								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.screen_name + '/status/' + obj.link_id + ' \')" style="overflow:hidden">'
 
-								html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="5"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
+								html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.icon + '"><font style="color: black" size="5"> ' + obj.name + '</font><font style="color: grey" size="4">' + '@' + obj.screen_name + '. </font></a></p>'
 
-								html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.created_at + '</font></p>';
+								html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.time + '</font></p>';
 
 								html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
 
