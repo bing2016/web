@@ -39,8 +39,8 @@ function getTweets2(query, dbData, result, res, max_id, min_id, key_id) {
                 Database.add(query, key_id, result);
                 result.unshift(0, 0);
                 Array.prototype.splice.apply(dbData, result); 
-                //res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-                //res.end(JSON.stringify(data));
+                res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+                res.end(JSON.stringify(dbData));
             }
     });
 
@@ -79,7 +79,7 @@ function profiles(query, res) {
                     Statistics.createCalendar();
                     
                     if (data[0] == null) {
-                        res.end()
+                        res.end(JSON.stringify(resObject))
                     } else {
                         resObject.user.name = data[0].user.name;
                         resObject.user.icon = data[0].user.profile_image_url;
@@ -99,7 +99,7 @@ function profiles(query, res) {
                     res.end(JSON.stringify(resObject));
               }  });
     } else {
-        res.end();
+        res.end(JSON.stringify(resObject));
     }
 
 }

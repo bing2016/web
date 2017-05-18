@@ -64,7 +64,7 @@ function getTweets(str, res) {
                 connection.query(queryString, [str], 
                     function(err, rows, fields) {
                         if (err) throw err;
-                        isInDatabase(str, connection);
+                        getTweets(str, connection);
                         //console.log('add to keywords');
                     });
 
@@ -83,9 +83,10 @@ function newConnection() {
     return connection;
 }
 
-connection = newConnection();
-connection.connect()
+var connection = newConnection();
+connection.connect();
 exports.add = add;
+exports.getTweets = getTweets;
 
 
 
