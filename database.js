@@ -22,7 +22,7 @@ function add(str, key_id, data) {
     //                             if (err) throw err;
                                 
                                 for (i in data) {
-                                    queryString = 'insert into tb_tweets (key_id, name, screen_name, id_str, icon, time, text, tweet_id, creat_at) '
+                                    queryString = 'insert into tb_tweets (key_id, name, screen_name, link_id, icon, time, text, tweet_id, creat_at) '
                                     + 'values (?, ?, ?, ?, ?, ?, ?, ?, now())'
 
                                     connection.query(queryString, [key_id, data[i].name, data[i].screen_name, data[i].link_id, 
@@ -64,7 +64,7 @@ function getTweets(str, res) {
                 connection.query(queryString, [str], 
                     function(err, rows, fields) {
                         if (err) throw err;
-                        getTweets(str, connection);
+                        getTweets(str, res);
                         //console.log('add to keywords');
                     });
 

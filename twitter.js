@@ -21,7 +21,7 @@ function getTweets2(query, dbData, result, res, max_id, min_id, key_id) {
                                  icon:tweetOri.user.profile_image_url, 
                                  screen_name: tweetOri.user.screen_name, 
                                  time: tweetOri.created_at, 
-                                 link_id:tweetOri.id_str, 
+                                 link_id:tweetOri.link_id, 
                                  text:tweetOri.text, 
                                  tweet_id:tweetOri.id};
                     tweets[index] = tweet;
@@ -90,7 +90,7 @@ function profiles(query, res) {
                             if (Statistics.isRecent(data[index].created_at)) resObject.user.recentNumberTweets += 1;
                             resObject.user.coordinates[index] = data[index].coordinates;
 
-                            var tweet = {time:data[index].created_at, id:data[index].id_str, text:data[index].text}
+                            var tweet = {time:data[index].created_at, id:data[index].link_id, text:data[index].text}
                             resObject.tweets[index] = tweet;
                     }
 
