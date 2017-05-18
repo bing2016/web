@@ -38,7 +38,7 @@
 // }
 
 function getTweets(query, res) {
-    client.get('search/tweets', { q: query, count: 3 },
+    client.get('search/tweets', { q: query, count: 100 },
         function (err, data, response) {
             res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
 
@@ -75,7 +75,8 @@ function profiles(query, res) {
                         resObject.user.screen_name = data[0].user.screen_name;
                         
                         for (var index in data) {
-                            resObject.user.nunberTweets += 1;
+                            console.log(data);
+                            resObject.user.numberTweets += 1;
                             if (Statistics.isRecent(data[index].created_at)) resObject.user.recentNumberTweets += 1;
                             resObject.user.geolist[index] = data[index].geo;
 
@@ -84,7 +85,7 @@ function profiles(query, res) {
                     }
 
                     //data.push({statuses:{numberTweets:numberTweets, recentNumberTweets:recentNumberTweets}})
-                    //console.log(JSON.stringify(data));
+                    console.log(JSON.stringify(resObject));
                     res.end(JSON.stringify(resObject));
               }  });
     } else {
