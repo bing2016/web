@@ -132,7 +132,7 @@
 								var obj = twit[i];
 								addRecent(obj.created_at);
 
-								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + '/status/' + obj.id_str + ' \')" >'
+								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + '/status/' + obj.id_str + ' \')" style="overflow:hidden">'
 
 								html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="5"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
 
@@ -190,9 +190,16 @@
 					type: 'POST',
 					success: function (dataR) {
 						var ret = JSON.stringify(dataR);
-						var User = JSON.parse(ret).user;
-						var Tweets = JSON.parse(ret).tweets;
-						var Geo = User.coordinates;
+
+						if((JSON.parse(ret).user.name)==""){
+							alert("Whoops, haven't find this Author.");
+						}
+
+						else{
+
+							var User = JSON.parse(ret).user;
+							var Tweets = JSON.parse(ret).tweets;
+							var Geo = User.coordinates;
 
 						// alert(Geo[0].coordinates);
 						$("#User_Profile").empty();
@@ -207,7 +214,7 @@
 								var obj = Tweets[i];
 								// addRecent(obj.created_at);
 
-								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + User.screen_name + '/status/' + obj.id + ' \')" >'
+								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + User.screen_name + '/status/' + obj.id + ' \')" style="overflow:hidden">'
 
 								html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.time + '</font></p>';
 
@@ -223,7 +230,7 @@
 						function init_UserProFile_Table () {
 							var html = '<table border=0>';
 
-							html += '<div class="w3-panel w3-light-grey w3-round w3-border" >'
+							html += '<div class="w3-panel w3-light-grey w3-round w3-border" style="overflow:hidden">'
 							
 							html += '<p><div class="w3-btn" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')"><img style="width:10%" src="' + User.icon + '"><font style="color: black" size="5"> ' + User.name + '</font><font style="color: grey" size="4">' + '@' + User.screen_name + '. </font></div></p>';
 
@@ -268,14 +275,15 @@
 								var marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(lat, lng)});
 							};
 						}
-
-
-					},
-					error: function (xhr, status, error) {
-						alert('Error: ' + error.message);
-
 					}
-				});
+
+
+				},
+				error: function (xhr, status, error) {
+					alert('Error: ' + error.message);
+
+				}
+			});
 
 			}
 
@@ -314,7 +322,7 @@
 					Query_Author();
 				}
 				else{
-					alert("Error: Whoops! You have input wrong format query. \nIt should be @Username ");
+					alert("Whoops! You have input wrong format query. \nIt should be @Username ");
 				}
 
 			}
