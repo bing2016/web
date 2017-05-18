@@ -6,36 +6,47 @@
     access_token: '17390300-NWxo1S3S8ctPjTnoZTjbUmy2lbCmZs4lHLclGzRQg',
     access_token_secret: 'dfMzkmPDcBkuSpCS6YmXhjoJNati7hBBCpLWmywk',
 });
-            
+var Database = require('./database')
 
-// function getTweets(query, result, res, id) {
-//     client.get('search/tweets', { q: query, count: 3, max_id: id},
-//         function (err, data, response) {
-//             if (data.statuses.length < 3) {
 
-//                 var tweets = [];
-//                 for (var index in data.statuses) {
-//                     var tweetOri = data.statuses[indx];
-//                     var tweet = {name:tweetOri.user.name, 
-//                                  icon:tweetOri.user.profile_image_url, 
-//                                  screen_name: tweetOri.user.screen_name, 
-//                                  time: tweetOri.created_at, 
-//                                  id_str:tweetOri.id_str, 
-//                                  text:tweetOri.text, 
-//                                  id:tweetOri.id};
-//                     tweets[index] = tweet;
-//                 }
-//                 var newdata = {tweets:result.tweets.concat(tweets)}
-//                 getTweets(query, newdata, res, tweets[data.statuses-1].id-1);
+function getTweets2(query, dbData, result, res, max_id, min_id, key_id) {
 
-//             } else {
+    client.get('search/tweets', { q: query, count: 3, max_id: max_id, since_id:min_id},
+        function (err, data, response) {
 
-//                 res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-//                 res.end(JSON.stringify(data));
-//             }
-//     }
+                var tweets = [];
+                for (var index in data.statuses) {
+                    var tweetOri = data.statuses[index];
+                    var tweet = {name:tweetOri.user.name, 
+                                 icon:tweetOri.user.profile_image_url, 
+                                 screen_name: tweetOri.user.screen_name, 
+                                 time: tweetOri.created_at, 
+                                 link_id:tweetOri.id_str, 
+                                 text:tweetOri.text, 
+                                 tweet_id:tweetOri.id};
+                    tweets[index] = tweet;
+                }
+                console.log(tweets);
+                console.log(max_id);
+                console.log('@@@@@@@@@');
 
-// }
+                Array.prototype.push.apply(result, tweets);
+
+            if (data.statuses.length = 3 && max_id == 99999999999999999999) {
+                getTweets2(query, dbData, result, res, tweets[data.statuses.length-1].id-1, min_id, key_id);
+
+            } else {
+                Database.add(query, key_id, result);
+                result.unshift(0, 0);
+                Array.prototype.splice.apply(dbData, result); 
+                //res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+                //res.end(JSON.stringify(data));
+            }
+    });
+
+}
+
+
 
 function getTweets(query, res) {
     client.get('search/tweets', { q: query, count: 3 },
@@ -79,7 +90,7 @@ function profiles(query, res) {
                             if (Statistics.isRecent(data[index].created_at)) resObject.user.recentNumberTweets += 1;
                             resObject.user.coordinates[index] = data[index].coordinates;
 
-                            var tweet = {time:data[0].created_at, id:data[0].id_str, text:data[0].user.text}
+                            var tweet = {time:data[index].created_at, id:data[index].id_str, text:data[index].text}
                             resObject.tweets[index] = tweet;
                     }
 
@@ -95,3 +106,4 @@ function profiles(query, res) {
 
 exports.getTweets = getTweets;
 exports.profiles = profiles;
+exports.getTweets2 = getTweets2;

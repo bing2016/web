@@ -4,6 +4,7 @@
  var file = new (static.Server)();
  var portNo = 3000;
 var Twitter = require('./twitter');
+var Database = require('./database');
 
  function addslashes(str) {
     return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
@@ -32,7 +33,8 @@ var app = protocol.createServer(function (req, res) {
 
             var query= body.query;
 
-            Twitter.getTweets(query, res);
+            //Twitter.getTweets(query, res);
+            Database.getTweets(query, res);
                     
 
 //            waitCallBack(5000, function () {
