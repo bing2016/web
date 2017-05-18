@@ -63,7 +63,7 @@ function profiles(query, res) {
             client.get('statuses/user_timeline', { screen_name: name  },
                 function (err, data, response) {
                     var resObject = {user:{}, tweets:[]};
-                    resObject.user = {name:'', icon:'', screen_name:'', numberTweets:0, recentNumberTweets:0, geolist:[]};
+                    resObject.user = {name:'', icon:'', screen_name:'', numberTweets:0, recentNumberTweets:0, coordinates:[]};
 
                     Statistics.createCalendar();
                     
@@ -75,9 +75,9 @@ function profiles(query, res) {
                         resObject.user.screen_name = data[0].user.screen_name;
                         
                         for (var index in data) {
-                            resObject.user.nunberTweets += 1;
+                            resObject.user.numberTweets += 1;
                             if (Statistics.isRecent(data[index].created_at)) resObject.user.recentNumberTweets += 1;
-                            resObject.user.geolist[index] = data[index].geo;
+                            resObject.user.coordinates[index] = data[index].coordinates;
 
                             var tweet = {time:data[0].created_at, id:data[0].id_str, text:data[0].user.text}
                             resObject.tweets[index] = tweet;
