@@ -6,15 +6,16 @@
 	<link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.js"></script>
 	<script src="Chart.js"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMnyCMgsyl1PdK-1dOEjRRHuAUK4uPHZs&callback=initMap"></script>
 
 	<style type="text/css">
+
 		.w3-panel:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
 		.w3-input:hover{box-shadow:0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19)}
 
 		#overlay {
 			position: absolute;
 			top: 0; right: 0; left: 0; bottom: 0;
-
 			background: rgba(0,0,0,0);
 			background-color: ;
 		}
@@ -23,58 +24,50 @@
 			background-image: url(background1.jpg);
 		}
 
-
 	</style>
 
 </head>
+
 <body>
 
 	<div class="hm-nw-bnr-vid">
 		<div class="hm-nw-bnr-bk"></div>
-
 		<video autoplay preload="" style="width:100%;opacity: 1" onended="BackGournd_Vedio_Opacity()" id="video">
 			<source src="Video1.mp4">
 			</video>
-
 		</div>
 
-		
-
-
-
 		<div class="w3-main" style="" id="overlay">
-
 			<div class="w3-row">
-
+				<div style="width: 90%;height: 90%"></div>
 				<div class="w3-col m9">
 					<div id="input" class="w3-center" style="width: 80%;margin-top: 28%;margin-left: 28%">
 						<div style="width: 100%" >
 							<form id="myForm" onsubmit="return false;" >
-								<font size="8" face="Lucida Sans Unicode" color="white">Query:</font><br>
-								<input id="input" class="w3-input w3-border" type="text" name="query" value="" oninput="Input_Position()"><br>
-								<button class="w3-btn w3-black" id="Query_Tweets_Button">Search Tweets</button>
-								<button class="w3-btn w3-black" id="Query_Author_Button">By @Author</button>
+								<font size="10" style="font-family: Verdana, Geneva, sans-serif" color="white">WebTeam R.P</font><br>
+								<input id="input" class="w3-input w3-border" type="text" name="query" value="" oninput="Input_Position()" autofocus><br>
+								<button class="w3-btn w3-black" id="Query_Tweets_Button">Query By Tweets</button>&emsp;
+								<button class="w3-btn w3-black" id="Query_Author_Button">Query By @Author</button>
 							</form>
-							<!-- <p id="lblResponse">fill me in</p> -->
 						</div>
 					</div>
-					<div class="">
-						<div class="" style="margin-left: 10%;width: 80% ">
-							<div class="" id="TweetList"></div>
+					<div>
+						<div style="margin-left: 10%;width: 80%; ">
+							<div id="TweetList"></div>
 						</div>
 					</div>
 
 				</div>
 
 				<div class="w3-col m3">
-					<div id="chart" class=" w3-panel w3-light-grey w3-round w3-border" style="margin-top: 15%;width: 90%;opacity: 0">
-						<canvas id="myChart" width="100%" height="80%">
+					<div id="User_Profile" style="margin-left:-2%;margin-top:3%;width:23%;opacity: 0;position: fixed;">
+					</div>
+
+					<div id="chart" class="w3-panel w3-light-grey w3-round w3-border" style="margin-left:-2%;margin-top:4%;width: 23%;opacity: 0;position: fixed;">
+						<canvas id="myChart" width="100%" height="80%" >
 						</canvas>
 					</div>
 				</div>
-
-
-
 			</div>
 		</div>
 
@@ -88,133 +81,203 @@
 					data: data,
 					type: 'POST',
 					success: function (data) {
-						// console.log("xxx");
 						var ret = JSON.stringify(data);
 
-					//if (JSON.parse(ret).statuses != null) {
+						var twit = JSON.parse(ret).statuses;
 
-					//$('#lblResponse').html(ret);
+						var monthObject = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12}
 
-					var twit = JSON.parse(ret).statuses;
-
-					var monthObject = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12}
-
-					function GetDateStr(AddDayCount) { 
-						var dd = new Date(); 
-						dd.setDate(dd.getDate()+AddDayCount);
-						var y = dd.getFullYear(); 
-						var m = dd.getMonth()+1;
-						var d = dd.getDate(); 
-						return d+"."+m+"."+y; 
-					} 
-
-					var day1 = GetDateStr(0);
-					var day2 = GetDateStr(-1);
-					var day3 = GetDateStr(-2);
-					var day4 = GetDateStr(-3);
-					var day5 = GetDateStr(-4);
-					var day6 = GetDateStr(-5);
-					var day7 = GetDateStr(-6);
-
-					var tweetCount = new Array();
-					tweetCount[day1] = 0;
-					tweetCount[day2] = 0;
-					tweetCount[day3] = 0;
-					tweetCount[day4] = 0;
-					tweetCount[day5] = 0;
-					tweetCount[day6] = 0;
-					tweetCount[day7] = 0;
-
-					function addRecent(str) {
-						var strs= new Array();
-						strs=str.split(" ");
-						var gavenDay = strs[2] + '.' + monthObject[strs[1]] + '.' + strs[5];
-						if (tweetCount.hasOwnProperty(gavenDay)) {
-							tweetCount[gavenDay] += 1;
+						function GetDateStr(AddDayCount) { 
+							var dd = new Date(); 
+							dd.setDate(dd.getDate()+AddDayCount);
+							var y = dd.getFullYear(); 
+							var m = dd.getMonth()+1;
+							var d = dd.getDate(); 
+							return d+"."+m+"."+y; 
 						} 
-					}
 
-					$("#TweetList").empty();
+						var day1 = GetDateStr(0);
+						var day2 = GetDateStr(-1);
+						var day3 = GetDateStr(-2);
+						var day4 = GetDateStr(-3);
+						var day5 = GetDateStr(-4);
+						var day6 = GetDateStr(-5);
+						var day7 = GetDateStr(-6);
 
-					initTable();
-					function initTable () {
-						var html = '<table border=0>';
-						for(var i=0,l=twit.length;i<l;i++){
-							var obj = twit[i];
-							addRecent(obj.created_at);
-							
-							html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + '/status/' + obj.id_str + ' \')" >'
-							// html += '<p>' + obj.created_at + '</p>';
+						var tweetCount = new Array();
+						tweetCount[day1] = 0;
+						tweetCount[day2] = 0;
+						tweetCount[day3] = 0;
+						tweetCount[day4] = 0;
+						tweetCount[day5] = 0;
+						tweetCount[day6] = 0;
+						tweetCount[day7] = 0;
 
-							html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="5"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
-
-							html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.created_at + '</font></p>';
-
-							html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
-
-							// for (var hashtag in obj.entities.hashtags) {
-							// html +='<p>' + obj.entities.hashtags[hashtag].Text + '</p>'
-							// }
-
-							html += '</div>'
-						}
-						html += '</table>';
-
-						$('#TweetList').append(html);
-					}
-
-					var arr1 = [day7,day6,day5,day4,day3,day2,day1];
-					var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
-
-					initChart();
-					function initChart() {
-						var ctx = $("#myChart").get(0).getContext("2d");
-
-						var data = {
-							labels: arr1,
-							datasets: [
-							{
-								fillColor: "rgba(220,220,220,0.5)",
-								strokeColor: "rgba(220,220,220,1)",
-								pointColor: "rgba(220,220,220,1)",
-								pointStrokeColor: "#fff",
-								data: arr2
-							},
-							]
+						function addRecent(str) {
+							var strs= new Array();
+							strs=str.split(" ");
+							var gavenDay = strs[2] + '.' + monthObject[strs[1]] + '.' + strs[5];
+							if (tweetCount.hasOwnProperty(gavenDay)) {
+								tweetCount[gavenDay] += 1;
+							} 
 						}
 
-						var myNewChart = new Chart(ctx , {
-							type: "line",
-							data: data, 
-						});
+						$("#TweetList").empty();
+						$("#User_Profile").empty();
 
-						Chart_Opacity();
-					}
+						init_Tweets_Table();
+						function init_Tweets_Table () {
+							var html = '<table border=0>';
+							for(var i=0,l=twit.length;i<l;i++){
+								var obj = twit[i];
+								addRecent(obj.created_at);
 
-				},
-				error: function (xhr, status, error) {
-					console.log('Error: ' + error.message);
-				},
-			});
+								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + '/status/' + obj.id_str + ' \')" >'
+
+								html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.user.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.user.profile_image_url + '"><font style="color: black" size="5"> ' + obj.user.name + '</font><font style="color: grey" size="4">' + '@' + obj.user.screen_name + '. </font></a></p>'
+
+								html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.created_at + '</font></p>';
+
+								html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
+
+								html += '</div>'
+							}
+							html += '</table>';
+
+							$('#TweetList').append(html);
+						}
+
+						var arr1 = [day7,day6,day5,day4,day3,day2,day1];
+						var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
+
+						initChart();
+						function initChart() {
+							var ctx = $("#myChart").get(0).getContext("2d");
+
+							var data = {
+								labels: arr1,
+								datasets: [
+								{
+									fillColor: "rgba(220,220,220,0.5)",
+									strokeColor: "rgba(220,220,220,1)",
+									pointColor: "rgba(220,220,220,1)",
+									pointStrokeColor: "#fff",
+									data: arr2
+								},
+								]
+							}
+
+							var myNewChart = new Chart(ctx , {
+								type: "line",
+								data: data, 
+							});
+
+							Chart_Opacity();
+						}
+
+					},
+					error: function (xhr, status, error) {
+						console.log('Error: ' + error.message);
+					},
+				});
 			}
 
 			function Send_Author_Query(url, data) {
-            $.ajax({
-                    url: 'http://127.0.0.1:3000/' + url,
-                    data: data,
-                    dataType:'json',
-                    type: 'POST',
-                    success: function (dataR) {
-                        var ret = JSON.stringify(dataR);
-                        alert(ret);
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Error: ' + error.message);
+				$.ajax({
+					url: 'http://127.0.0.1:3000/' + url,
+					data: data,
+					dataType:'json',
+					type: 'POST',
+					success: function (dataR) {
+						var ret = JSON.stringify(dataR);
+						var User = JSON.parse(ret).user;
+						var Tweets = JSON.parse(ret).tweets;
+						var Geo = User.coordinates;
 
-                    }
-                });
+						// alert(Geo[0].coordinates);
+						$("#User_Profile").empty();
+						$("#TweetList").empty();
+						init_UserProFile_Table();
+						init_Tweets_Table();
+						create_Map();
 
-        }
+						function init_Tweets_Table () {
+							var html = '<table border=0>';
+							for(var i=0,l=Tweets.length;i<l;i++){
+								var obj = Tweets[i];
+								// addRecent(obj.created_at);
+
+								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + User.screen_name + '/status/' + obj.id + ' \')" >'
+
+								html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.time + '</font></p>';
+
+								html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
+
+								html += '</div>'
+							}
+							html += '</table>';
+
+							$('#TweetList').append(html);
+						}
+
+						function init_UserProFile_Table () {
+							var html = '<table border=0>';
+
+							html += '<div class="w3-panel w3-light-grey w3-round w3-border" >'
+							
+							html += '<p><div class="w3-btn" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')"><img style="width:10%" src="' + User.icon + '"><font style="color: black" size="5"> ' + User.name + '</font><font style="color: grey" size="4">' + '@' + User.screen_name + '. </font></div></p>';
+
+							html += '<div id="map" style="width:90%;height:300px;margin-left:5%"></div><br>';
+
+							html += '<p style="margin-left:5%;font-size:18px">Total number of Tweets: ' + User.numberTweets + '</p>';
+
+							html += '<p style="margin-left:5%;font-size:18px">Number of Keywords: 25</p>';
+
+							html +=	'<p style="margin-left:5%;font-size:18px">10 Most popular Keywords:</p>';
+
+							html += '<p style="margin-left:5%;font-size:18px">Congratulations (12), Reds (12), signed (10), Good (5), Luck (5) …</p>'
+
+							html += '<p style="margin-left:5%;font-size:18px">Keywords in the last 7 days:</p>'
+
+							html += '<p style="margin-left:5%;font-size:18px">Congratulations (3), Reds (3), hope (5) …</p><br>';
+
+							html += '</div>'
+
+							html += '</table>';
+
+							$('#User_Profile').append(html);
+
+							User_Profile_Opacity();
+							Chart_Opacity_0();
+						}
+
+						function create_Map(){
+							var mapType = google.maps.MapTypeId.ROADMAP;
+							var lat = 53.508742, lng = -2.120850, zoom = 5;
+							var mapOptions = {
+								center: new google.maps.LatLng(lat, lng),  
+								zoom: zoom,               　　　　　　　　　　
+								mapTypeId: mapType,       　　　　　　　　　　
+								scrollwheel: true          　　　　　　　　　 
+							};
+							var map = new google.maps.Map(document.getElementById("map"), mapOptions); 
+
+							for(var geo in Geo) {
+								var lng = Geo[geo].coordinates[0];
+								var lat = Geo[geo].coordinates[1];
+								var marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(lat, lng)});
+							};
+						}
+
+
+					},
+					error: function (xhr, status, error) {
+						alert('Error: ' + error.message);
+
+					}
+				});
+
+			}
 
 			$.fn.serializeObject = function () {
 				var o = {};
@@ -271,6 +334,17 @@
 				var node = $("#chart");
 				node.css("opacity", "1");
 
+			}
+
+			function Chart_Opacity_0(){
+				var node = $("#chart");
+				node.css("opacity", "0");
+
+			}
+
+			function User_Profile_Opacity(){
+				var node = $("#User_Profile");
+				node.css("opacity", "1");
 			}
 
 			function BackGournd_Vedio_Opacity() {
