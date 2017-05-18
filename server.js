@@ -3,7 +3,7 @@
  var url = require('url');
  var file = new (static.Server)();
  var portNo = 3000;
- var Twitter = require('./twitter');
+var Twitter = require('./twitter');
 
  function addslashes(str) {
     return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
