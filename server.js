@@ -32,7 +32,7 @@ var app = protocol.createServer(function (req, res) {
             body= JSON.parse(body);
 
             var query= body.query;
-
+            console.log('search tweets')
             //Twitter.getTweets(query, res);
             Database.getTweets(query, res);
                     

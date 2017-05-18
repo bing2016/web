@@ -21,19 +21,17 @@ function getTweets2(query, dbData, result, res, max_id, min_id, key_id) {
                                  icon:tweetOri.user.profile_image_url, 
                                  screen_name: tweetOri.user.screen_name, 
                                  time: tweetOri.created_at, 
-                                 link_id:tweetOri.link_id, 
+                                 link_id:tweetOri.id_str, 
                                  text:tweetOri.text, 
                                  tweet_id:tweetOri.id};
                     tweets[index] = tweet;
                 }
-                console.log(tweets);
-                console.log(max_id);
-                console.log('@@@@@@@@@');
 
                 Array.prototype.push.apply(result, tweets);
 
-            if (data.statuses.length = 3 && max_id == 99999999999999999999) {
-                getTweets2(query, dbData, result, res, tweets[data.statuses.length-1].id-1, min_id, key_id);
+            if (data.statuses.length == 3 && max_id == 99999999999999999999) {
+                //console.log(tweets);
+                getTweets2(query, dbData, result, res, tweets[data.statuses.length-1].tweet_id-100, min_id, key_id);
 
             } else {
                 Database.add(query, key_id, result);

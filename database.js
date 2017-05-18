@@ -29,7 +29,6 @@ function add(str, key_id, data) {
                                         data[i].icon, displayDate(data[i].time), data[i].text, data[i].tweet_id],
                                         function(err, rows, fields) {
                                             if (err) throw err;
-                                            console.log('bbb');
                                         });
                                 }
                                 
@@ -46,16 +45,16 @@ function getTweets(str, res) {
             if (rows != null && rows.length > 0) {
                 var queryString = 'SELECT * FROM tb_tweets WHERE key_id = ? order by tweet_id desc'
                 var key_id = rows[0]['id'];
-                console.log(key_id);    
+                //console.log(key_id);    
                 connection.query(queryString, [key_id], 
                     function(err, rows, fields) {
                         if (rows != null && rows.length > 0) {
                             min_id = rows[0].tweet_id;
                         } else {
-                            console.log('bb');
                             rows = [];
                             min_id = 0;
                         }
+
                         Twitter.getTweets2(str, rows, [], res, 99999999999999999999, min_id, key_id);
 
                     });
