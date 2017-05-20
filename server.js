@@ -3,8 +3,9 @@
  var url = require('url');
  var file = new (static.Server)();
  var portNo = 3000;
-var Twitter = require('./twitter');
-var Database = require('./database');
+
+var Profiles = require('./profiles');
+var Query = require('./query')
 
  function addslashes(str) {
     return (str + '').replace(/[\\"']/g, '\\$&').replace(/\u0000/g, '\\0');
@@ -31,10 +32,11 @@ var app = protocol.createServer(function (req, res) {
         req.on('end', function () {
             body= JSON.parse(body);
 
-            var query= body.query;
-            console.log('search tweets')
-            //Twitter.getTweets(query, res);
-            Database.getTweets(query, res);
+            var queryString = body.query;
+            var api = body.api;
+
+            //Database.getTweets(queryString, res);
+            Query.query(queryString, api, res)
                     
 
 //            waitCallBack(5000, function () {
@@ -52,7 +54,8 @@ var app = protocol.createServer(function (req, res) {
         req.on('end', function () {
             body= JSON.parse(body);
             var query= body.query;
-            Twitter.profiles(query, res);
+            var api = body.api;
+            Profiles.profiles(query, api, res);
         });
     }
     else {
