@@ -3,6 +3,7 @@ function init_UserProFile_Table (data) {
 	var ret = JSON.stringify(data);
 	var User = JSON.parse(ret).user;
 	var keywords = JSON.parse(ret).keywords;
+	console.log(ret);
 	var html = '<table border=0>';
 
 	html += '<div class=" w3-panel w3-light-grey w3-round w3-border" style="overflow:hidden">'
@@ -12,13 +13,15 @@ function init_UserProFile_Table (data) {
 
 	html += '<div id="map" style="width:90%;height:300px;margin-left:5%"></div><br>';
 
-	html += '<p style="margin-left:5%;font-size:18px">Total number of Tweets: ' + User.numberTweets + '</p>';
+	html += '<p style="margin-left:5%;font-size:18px">Total number of Tweets: ' + User.tweets_num + '</p>';
 
-	html += '<p style="margin-left:5%;font-size:18px">Number of Keywords: 25</p>';
+	html += '<p style="margin-left:5%;font-size:18px">Number of Tweets in the last 5 days: ' + User.recentTweets_num + '</p>'
+
+	html += '<p style="margin-left:5%;font-size:18px">Number of Keywords: ' + keywords.number + '</p>';
 
 	html +=	'<p style="margin-left:5%;font-size:18px">10 Most popular Keywords:</p>';
 
-	html += '<p style="margin-left:5%;font-size:18px">'+ keywords+'</p>'
+	html += '<p style="margin-left:5%;font-size:18px">'+ keywords.popular +'</p>'
 
 	html += '<p style="margin-left:5%;font-size:18px">Keywords in the last 7 days:</p>'
 
