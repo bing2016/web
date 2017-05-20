@@ -90,7 +90,7 @@ function calculations(data) {
     result.number = keywords.length
     result.popular = ''
     for (i = 0; i<10; i++) {
-        result.popular += keysSorted[i] +':(' frequency[keysSorted[i]] + '), '
+        result.popular += keysSorted[i] + ':(' + frequency[keysSorted[i]] + '), '
     }
     console.log(result)
     return result
