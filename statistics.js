@@ -59,13 +59,13 @@ function getTime(str) {
 }
 
 function calculations(data) {
-    var result = {num:0, popular:[], recent:[]}
+    var result = {'number':0, 'popular':'', 'recent':''}
     var strs = []
     var frequency = []
-    var keywords = []
+    var keywordslist = []
     var result = []
     var normalwords = ['RT','the', 'of', 'new', 'is', 'to']
-    //console.log(data[0])
+
     for (i in data) {
         tweet = data[i].text
         strs = tweet.split(" ")
@@ -78,16 +78,16 @@ function calculations(data) {
             if (frequency.hasOwnProperty(keyword)) frequency[keyword] += 1
             else {
                 frequency[keyword] = 0
-                keywords.push(keyword)
+                keywordslist.push(keyword)
             }
         }
     }
 
 
     //console.log(keywords)
-    keysSorted = keywords.sort(function(a,b){return frequency[b]-frequency[a]})
+    keysSorted = keywordslist.sort(function(a,b){return frequency[b]-frequency[a]})
 
-    result.number = keywords.length
+    result.number = keywordslist.length
     result.popular = ''
     for (i = 0; i<10; i++) {
         result.popular += keysSorted[i] + ':(' + frequency[keysSorted[i]] + '), '

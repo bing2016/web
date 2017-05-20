@@ -3,7 +3,7 @@ var Database = require('./database')
 var res;
 
 function resp(key_id, result, dbData) {
-    Database.add(result);
+    Database.add(result, function(){});
     result.unshift(0, 0);
     Array.prototype.splice.apply(dbData, result);
     res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});

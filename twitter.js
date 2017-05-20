@@ -37,7 +37,7 @@ function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callba
             function (err, data, response) {
                 var tweets = formatData(data);
                 Array.prototype.push.apply(result, tweets);
-                if (data.statuses.length == 3 && max_id == 99999999999999999999) {
+                if (data.statuses !=null && data.statuses.length == 3 && max_id == 99999999999999999999) {
                     getTweetsByAPI(str, dbData, result, tweets[data.statuses.length-1].tweet_id-100, min_id, key_id, api, callback);
 
                 } else { 
@@ -54,7 +54,7 @@ function getProfiles(query, resObject, callback) {
     var name = query.substring(1)
     client.get('users/show', { screen_name: name },
         function (err, data, response) {
-            console.log(data)
+
             resObject.user.name = data.name
             resObject.user.icon = data.profile_image_url
             resObject.user.screen_name = data.screen_name

@@ -6,35 +6,40 @@ function newConnection() {
     var connection = mysql.createConnection({
         host : '127.0.0.1', port : '3306', charset : 'utf8mb4',
         user : 'root', password : '', database : 'web',
+        multipleStatements:true
     });
     console.log('lets start');
     return connection;
 }
 
 
-function add(data) {
+function add(data, callback) {
 
+    queryString = 'insert into tb_tweets(key_id, name, screen_name, link_id, icon, date, time, text, tweet_id, coordinates) values ?'
+    var valueslist = []
     for (i in data) {
-        queryString = 'insert into tb_tweets (key_id, name, screen_name, link_id, icon, date, time, text, tweet_id, coordinates, creat_at) '
-        + 'values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())'
-
-        connection.query(queryString, [key_id, data[i].name, data[i].screen_name, data[i].link_id, data[i].icon, 
-            data[i].date, data[i].time, data[i].text, data[i].tweet_id, data[i].coordinates],
-            function(err, rows, fields) {
-                if (err) throw err;
-            });
+        // queryString += '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())'
+        valueslist.push([key_id, data[i].name, data[i].screen_name, data[i].link_id, data[i].icon, 
+            data[i].date, data[i].time, data[i].text, data[i].tweet_id, data[i].coordinates])
     }
-
-    console.log('add ' + data.length + ' tweets to db');
+    connection.query(queryString, [valueslist],
+        function(err, rows, fields) {
+            if (err) throw err;
+            console.log('add ' + data.length + ' tweets to db')
+            return callback()
+        });
+    
 
 }
 
 function getRencentNum(key_id, days, callback) {
-    queryString = 'select count(*) as num from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ? union select count(*) from tb_tweets;';
+    console.log(key_id)
+    queryString = 'select count(*) as num, (select count(*) from tb_tweets) as total from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ?';
     connection.query(queryString, [key_id], 
         function(err, rows, fields) {
                 if (err) throw err;
-                return callback([rows[0].num, rows[1].num]);
+                console.log(rows)
+                return callback([rows[0].num, rows[0].total]);
             });
 }
 
