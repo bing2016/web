@@ -114,12 +114,19 @@
 
 		</div>
 
-		<div id="alert" class="w3-panel w3-red w3-display-container" style="position: absolute;left: 40%;top: 45%;display: none;">
+		<div id="alert_1" class="w3-panel w3-red w3-display-container" style="position: absolute;left: 40%;top: 45%;display: none;width:500px">
 			<span onclick="this.parentElement.style.display='none'"
 			class="w3-button w3-red w3-large w3-display-topright">&times;</span>
 			<h3>Whoops!</h3>
 			<p>You have input wrong format query.</p>
-			<p>It should be @Username</p>
+			<p>It should be @Username(length<16)</p>
+		</div>
+
+		<div id="alert_2" class="w3-panel w3-red w3-display-container" style="position: absolute;left: 40%;top: 45%;display: none;width:500px">
+			<span onclick="this.parentElement.style.display='none'"
+			class="w3-button w3-red w3-large w3-display-topright">&times;</span>
+			<h3>Whoops!</h3>
+			<p>haven't find this Author.</p>
 		</div>
 		
 		<script type="text/javascript">
@@ -158,8 +165,9 @@
 					success: function (data) {
 						var ret = JSON.stringify(data);
 
-						if((JSON.parse(ret).user.name)==""){
-							alert("Whoops, haven't find this Author.");
+						if((JSON.parse(ret).user.name)==null){
+							var node = $("#alert_2");
+							node.css("display", "block");
 						}
 						else{
 							$("#User_Profile").empty();
@@ -212,7 +220,7 @@
 					Query_Author();
 				}
 				else{
-					var node = $("#alert");
+					var node = $("#alert_1");
 					node.css("display", "block");
 				}
 
