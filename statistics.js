@@ -88,9 +88,9 @@ function calculations(data) {
     keysSorted = keywords.sort(function(a,b){return frequency[b]-frequency[a]})
 
     result.number = keywords.length
-    result.popular = []
+    result.popular = ''
     for (i = 0; i<10; i++) {
-        result.popular[keysSorted[i]] = frequency[keysSorted[i]]
+        result.popular += keysSorted[i] +':(' frequency[keysSorted[i]] + '), '
     }
     console.log(result)
     return result
