@@ -11,24 +11,24 @@ function Input_Position(){
 
 function Chart_Opacity(){
 	var node = $("#chart");
-	node.css("opacity", "1");
+	node.css("display", "block");
 
 }
 
 function Chart_Opacity_0(){
 	var node = $("#chart");
-	node.css("opacity", "0");
+	node.css("display", "none");
 
 }
 
 function User_Profile_Opacity(){
 	var node = $("#User_Profile");
-	node.css("opacity", "1");
+	node.css("display", "block");
 }
 
 function BackGournd_Vedio_Opacity() {
 	var node = $("#video");
-	node.css("opacity", "0");
+	node.css("display", "none");
 }
 
 window.onscroll = function (){
