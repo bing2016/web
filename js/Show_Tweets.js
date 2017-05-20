@@ -4,14 +4,14 @@ function init_UserProFile_Table (data) {
 	var User = JSON.parse(ret).user;
 	var keywords = JSON.parse(ret).keywords;
 	console.log(ret);
-	var html = '<table border=0>';
+	var html = '<idv border=0>';
 
 	html += '<div class=" w3-panel w3-light-grey w3-round w3-border" style="overflow:hidden">'
 
-	html += '<p><a class="w3-btn" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')" ><img style="height:50px" src="' + User.icon + 
-	'"><font style="color: black" size="5"> ' + User.name + '</a></p></font><font style="color: grey;margin-left:5%" size="3">' + '  @' + User.screen_name + '. </font></p>'
+	html += '<a class="w3-btn" style="margin-left:5%" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')" ><table><td><img style="height:50px" src="' + User.icon + 
+	'"></td><td><div><font style="color: black" size="5"> ' + User.name + '</font><br><font style="color: grey;" size="3">' + '  @' + User.screen_name + '. </font></div></td></table></a>'
 
-	html += '<div id="map" style="width:90%;height:300px;margin-left:5%"></div><br>';
+	html += '<div id="map" style="width:90%;height:100px;margin-left:5%;margin-top:5px"></div>';
 
 	html += '<p style="margin-left:5%;font-size:18px">Total number of Tweets: ' + User.tweets_num + '</p>';
 
@@ -29,7 +29,7 @@ function init_UserProFile_Table (data) {
 
 	html += '</div>'
 
-	html += '</table>';
+	html += '</div>';
 
 	$('#User_Profile').append(html);
 
@@ -46,9 +46,11 @@ function init_Tweets_Table_2 (data) {
 	for(var i=0,l=Tweets.length;i<l;i++){
 		var obj = Tweets[i];
 
-		html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + User.screen_name + '/status/' + obj.link_id + ' \')" style="overflow:hidden">'
+		html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.screen_name + '/status/' + obj.link_id + ' \')" style="overflow:hidden;padding:10px">'
 
-		html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.time + '</font></p>';
+		html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.icon + '"><font style="color: black" size="5"> ' + obj.name + '</font><font style="color: grey" size="4">' + '@' + obj.screen_name + '. </font></a>'
+
+		html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.date + ' ' + obj.time + '</font></p>'
 
 		html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
 
