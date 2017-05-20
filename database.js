@@ -86,13 +86,13 @@ function callAPI (rows, str, key_id, api, callbackcode) {
 
 }
 
-function addKeyword (str) {
+function addKeyword (str, api, callbackcode) {
     var queryString = 'insert into tb_keywords (keyword, time) values (?, now())'
     connection.query(queryString, [str], 
         function(err, rows, fields) {
             if (err) throw err;
             console.log('add a new keyword : ' + str);
-            isInDatabase();
+            isInDatabase(str, api, callbackcode);
         });
 }
 
@@ -110,7 +110,7 @@ function getTweetsByDB(rows, str, api, callbackcode) {
         
     } else {
         console.log('keyword : ' + str + ' cannot find in db')
-        addKeyword(str);
+        addKeyword(str, api, callbackcode);
     }
 }
 

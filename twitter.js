@@ -11,6 +11,7 @@
 
 function formatData(data) {
     var tweets = [];
+
     for (var index in data.statuses) {
         var tweetOri = data.statuses[index];
         var tweet = {
@@ -21,7 +22,7 @@ function formatData(data) {
             time: Statistics.getTime(tweetOri.created_at), 
             link_id:tweetOri.id_str, 
             text:tweetOri.text,
-            coordinates:tweetOri.text,
+            coordinates:tweetOri.coordinates,
             tweet_id:tweetOri.id
         };
         tweets[index] = tweet;
@@ -31,13 +32,14 @@ function formatData(data) {
 }
 
 function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callback) {
-    if ('on' == api) {
+    if (api == 'on') {
+        console.log('aaaaa')
         client.get('search/tweets', { q: str, count: 3, max_id: max_id, since_id:min_id},
             function (err, data, response) {
                 var tweets = formatData(data);
                 Array.prototype.push.apply(result, tweets);
                 if (data.statuses.length == 3 && max_id == 99999999999999999999) {
-                    getTweetsByAPI(str, dbData, result, tweets[data.statuses.length-1].tweet_id-100, min_id, key_id, callback);
+                    getTweetsByAPI(str, dbData, result, tweets[data.statuses.length-1].tweet_id-100, min_id, key_id, api, callback);
 
                 } else { 
                     return callback(key_id, result, dbData);
@@ -45,6 +47,7 @@ function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callba
             });
     }
     else {
+        console.log('bbbbbb')
         return callback(key_id, [], dbData);
     }
 }

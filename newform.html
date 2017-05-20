@@ -2,11 +2,19 @@
 <html>
 <head lang="en">
 	<meta charset="UTF-8">
-	<title>Ajax form</title>
+	<title>WebTeam R.P</title>
 	<link rel="stylesheet" type="text/css" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.js"></script>
-	<script src="Chart.js"></script>
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCMnyCMgsyl1PdK-1dOEjRRHuAUK4uPHZs&callback=initMap"></script>
+
+	<script src="js/Chart.js"></script>
+	<script src="js/Effect_Method.js" type="text/javascript"></script>
+	<script src="js/Map.js" type="text/javascript"></script>
+	<script src="js/Show_Tweets.js" type="text/javascript"></script>
+	<script src="js/myChart.js" type="text/javascript"></script>
+	<script src="js/count.js" type="text/javascript"></script>
 
 	<style type="text/css">
 
@@ -21,7 +29,7 @@
 		}
 
 		body {
-			background-image: url(background1.jpg);
+			background-image: url(images/background1.jpg);
 		}
 
 	</style>
@@ -46,6 +54,8 @@
 							<form id="myForm" onsubmit="return false;" >
 								<font size="10" style="font-family: Verdana, Geneva, sans-serif" color="white">WebTeam R.P</font><br>
 								<input id="input" class="w3-input w3-border" type="text" name="query" value="" oninput="Input_Position()" autofocus><br>
+								<a class="Tip_Link" href="javascript:void(0)"  style="color: white">Tip</a>&emsp;
+								<label style="color: white">Using DataBase: </label><input name="api" id="add_type" type="checkbox" class="w3-check" value="on" checked="checked" onclick="changevalue();" />
 								<button class="w3-btn w3-black" id="Query_Tweets_Button">Query By Tweets</button>&emsp;
 								<button class="w3-btn w3-black" id="Query_Author_Button">Query By @Author</button>
 							</form>
@@ -60,8 +70,7 @@
 				</div>
 
 				<div class="w3-col m3">
-					<div id="User_Profile" style="margin-left:-2%;margin-top:3%;width:23%;opacity: 0;position: fixed;">
-					</div>
+					<div id="User_Profile" style="margin-left:-2%;margin-top:3%;width:23%;opacity: 0;position: fixed;"></div>
 
 					<div id="chart" class="w3-panel w3-light-grey w3-round w3-border" style="margin-left:-2%;margin-top:4%;width: 23%;opacity: 0;position: fixed;">
 						<canvas id="myChart" width="100%" height="80%" >
@@ -69,6 +78,37 @@
 					</div>
 				</div>
 			</div>
+		</div>
+
+		<div class="Tip_Alert w3-panel w3-light-grey w3-round w3-border"  style="width: 500px;display: none;  position:absolute; top:10%; left:35%;">
+
+			<h3>Search Operators<i class="fa fa-close Tip_Close w3-right w3-btn" href="javascript:void(0)"></i></h3>
+
+			<table class="w3-table w3-bordered w3-small" >
+				<thead>
+					<tr>
+						<th>Operator</th>
+						<th>Finds tweets...</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr><td>twitter search</td><td>containing both "twitter" and "search". This is the default operator.</td></tr>
+					<tr><td><b>"</b>happy hour<b>"</b></td><td>containing the exact phrase "happy hour".</td></tr>
+					<tr><td>love <b>OR</b> hate</td><td>containing either "love" or "hate" (or both).</td></tr>
+					<tr><td>beer <b>-</b>root</td><td>containing "beer" but not "root".</td></tr>
+					<tr><td><b>#</b>haiku</td><td>containing the hashtag "haiku".</td></tr>
+					<tr><td><b>from:</b>alexiskold</td><td>sent from person "alexiskold".</td></tr>
+					<tr><td><b>to:</b>techcrunch</td><td>sent to person "techcrunch".</td></tr>
+					<tr><td><b>@</b>mashable</td><td>referencing person "mashable".</td></tr>
+					<tr><td>"happy hour" <b>near:</b>"san francisco"</td><td>containing the exact phrase "happy hour" and sent near "san francisco".</td></tr>
+					<tr><td><b>near:</b>NYC <b>within:</b>15mi</td><td>sent within 15 miles of "NYC".</td></tr>
+					<tr><td>superhero <b>since:</b>2010-12-27</td><td>containing "superhero" and sent since date "2010-12-27" (year-month-day).</td></tr>
+					<tr><td>ftw <b>until:</b>2010-12-27</td><td>containing "ftw" and sent up to date "2010-12-27".</td></tr>
+					<tr><td>hilarious <b>filter:links</b></td><td>containing "hilarious" and linking to URLs.</td></tr>
+					<tr><td>news <b>source:"Twitter Lite"</b></td><td>containing "news" and entered via Twitter Lite</td></tr>
+				</tbody>
+			</table>
+
 		</div>
 
 
@@ -81,101 +121,22 @@
 					data: data,
 					type: 'POST',
 					success: function (data) {
-						var ret = JSON.stringify(data);
-						var twit = JSON.parse(ret);
 
-						var monthObject = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12}
-
-						function GetDateStr(AddDayCount) { 
-							var dd = new Date(); 
-							dd.setDate(dd.getDate()+AddDayCount);
-							var y = dd.getFullYear(); 
-							var m = dd.getMonth()+1;
-							var d = dd.getDate(); 
-							return d+"."+m+"."+y; 
-						} 
-
-						var day1 = GetDateStr(0);
-						var day2 = GetDateStr(-1);
-						var day3 = GetDateStr(-2);
-						var day4 = GetDateStr(-3);
-						var day5 = GetDateStr(-4);
-						var day6 = GetDateStr(-5);
-						var day7 = GetDateStr(-6);
-
-						var tweetCount = new Array();
-						tweetCount[day1] = 0;
-						tweetCount[day2] = 0;
-						tweetCount[day3] = 0;
-						tweetCount[day4] = 0;
-						tweetCount[day5] = 0;
-						tweetCount[day6] = 0;
-						tweetCount[day7] = 0;
-
-						function addRecent(str) {
-							var strs= new Array();
-							strs=str.split(" ");
-							var gavenDay = strs[2] + '.' + monthObject[strs[1]] + '.' + strs[5];
-							if (tweetCount.hasOwnProperty(gavenDay)) {
-								tweetCount[gavenDay] += 1;
-							} 
-						}
+						alert("xxx");
 
 						$("#TweetList").empty();
 						$("#User_Profile").empty();
 
-						init_Tweets_Table();
-						function init_Tweets_Table () {
-							var html = '<table border=0>';
-							for(var i=0,l=twit.length;i<l;i++){
-								var obj = twit[i];
-								addRecent(obj.time);
-
-								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.screen_name + '/status/' + obj.link_id + ' \')" style="overflow:hidden">'
-
-								html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + obj.screen_name + ' \')" ><font style="color: black" size="4">Author: </font><img style="height:50px" src="' + obj.icon + '"><font style="color: black" size="5"> ' + obj.name + '</font><font style="color: grey" size="4">' + '@' + obj.screen_name + '. </font></a></p>'
-
-								html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.time + '</font></p>';
-
-								html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
-
-								html += '</div>'
-							}
-							html += '</table>';
-
-							$('#TweetList').append(html);
-						}
-
+						init_Tweets_Table(data);
+						
 						var arr1 = [day7,day6,day5,day4,day3,day2,day1];
 						var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
-
-						initChart();
-						function initChart() {
-							var ctx = $("#myChart").get(0).getContext("2d");
-
-							var data = {
-								labels: arr1,
-								datasets: [
-								{
-									fillColor: "rgba(220,220,220,0.5)",
-									strokeColor: "rgba(220,220,220,1)",
-									pointColor: "rgba(220,220,220,1)",
-									pointStrokeColor: "#fff",
-									data: arr2
-								},
-								]
-							}
-
-							var myNewChart = new Chart(ctx , {
-								type: "line",
-								data: data, 
-							});
-
-							Chart_Opacity();
-						}
+						initChart(arr1, arr2);
 
 					},
 					error: function (xhr, status, error) {
+						alert("yyyyy");
+
 						console.log('Error: ' + error.message);
 					},
 				});
@@ -187,102 +148,25 @@
 					data: data,
 					dataType:'json',
 					type: 'POST',
-					success: function (dataR) {
-						var ret = JSON.stringify(dataR);
+					success: function (data) {
+						var ret = JSON.stringify(data);
 
 						if((JSON.parse(ret).user.name)==""){
 							alert("Whoops, haven't find this Author.");
 						}
-
 						else{
-
-							var User = JSON.parse(ret).user;
-							var Tweets = JSON.parse(ret).tweets;
-							var Geo = User.coordinates;
-
-						// alert(Geo[0].coordinates);
-						$("#User_Profile").empty();
-						$("#TweetList").empty();
-						init_UserProFile_Table();
-						init_Tweets_Table();
-						create_Map();
-
-						function init_Tweets_Table () {
-							var html = '<table border=0>';
-							for(var i=0,l=Tweets.length;i<l;i++){
-								var obj = Tweets[i];
-								// addRecent(obj.created_at);
-
-								html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + User.screen_name + '/status/' + obj.id + ' \')" style="overflow:hidden">'
-
-								html += '<p style="margin-left:14px"><font style="color: black" size="3">Date: </font><font style="color: grey" size="3">' + obj.time + '</font></p>';
-
-								html += '<p style="margin-left:14px"><font style="color: black" size="5"> Tweet: ' + obj.text + '</font></p>'
-
-								html += '</div>'
-							}
-							html += '</table>';
-
-							$('#TweetList').append(html);
+							$("#User_Profile").empty();
+							$("#TweetList").empty();
+							init_UserProFile_Table(data);
+							init_Tweets_Table_2(data);
+							create_Map(data);
 						}
+					},
+					error: function (xhr, status, error) {
+						alert('Error: ' + error.message);
 
-						function init_UserProFile_Table () {
-							var html = '<table border=0>';
-
-							html += '<div class="w3-panel w3-light-grey w3-round w3-border" style="overflow:hidden">'
-							
-							html += '<p><div class="w3-btn" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')"><img style="width:10%" src="' + User.icon + '"><font style="color: black" size="5"> ' + User.name + '</font><font style="color: grey" size="4">' + '@' + User.screen_name + '. </font></div></p>';
-
-							html += '<div id="map" style="width:90%;height:300px;margin-left:5%"></div><br>';
-
-							html += '<p style="margin-left:5%;font-size:18px">Total number of Tweets: ' + User.numberTweets + '</p>';
-
-							html += '<p style="margin-left:5%;font-size:18px">Number of Keywords: 25</p>';
-
-							html +=	'<p style="margin-left:5%;font-size:18px">10 Most popular Keywords:</p>';
-
-							html += '<p style="margin-left:5%;font-size:18px">Congratulations (12), Reds (12), signed (10), Good (5), Luck (5) …</p>'
-
-							html += '<p style="margin-left:5%;font-size:18px">Keywords in the last 7 days:</p>'
-
-							html += '<p style="margin-left:5%;font-size:18px">Congratulations (3), Reds (3), hope (5) …</p><br>';
-
-							html += '</div>'
-
-							html += '</table>';
-
-							$('#User_Profile').append(html);
-
-							User_Profile_Opacity();
-							Chart_Opacity_0();
-						}
-
-						function create_Map(){
-							var mapType = google.maps.MapTypeId.ROADMAP;
-							var lat = 53.508742, lng = -2.120850, zoom = 5;
-							var mapOptions = {
-								center: new google.maps.LatLng(lat, lng),  
-								zoom: zoom,               　　　　　　　　　　
-								mapTypeId: mapType,       　　　　　　　　　　
-								scrollwheel: true          　　　　　　　　　 
-							};
-							var map = new google.maps.Map(document.getElementById("map"), mapOptions); 
-
-							for(var geo in Geo) {
-								var lng = Geo[geo].coordinates[0];
-								var lat = Geo[geo].coordinates[1];
-								var marker = new google.maps.Marker({map: map,position: new google.maps.LatLng(lat, lng)});
-							};
-						}
 					}
-
-
-				},
-				error: function (xhr, status, error) {
-					alert('Error: ' + error.message);
-
-				}
-			});
+				});
 
 			}
 
@@ -326,43 +210,22 @@
 
 			}
 
-			function openpage(url){
-				window.open(url);
-			} 
-
-			function Input_Position(){
-				var node = $("#input");
-				node.css("margin-top", "0%");
-				node.css("margin-left", "10%");
-
-			}
-
-			function Chart_Opacity(){
-				var node = $("#chart");
-				node.css("opacity", "1");
-
-			}
-
-			function Chart_Opacity_0(){
-				var node = $("#chart");
-				node.css("opacity", "0");
-
-			}
-
-			function User_Profile_Opacity(){
-				var node = $("#User_Profile");
-				node.css("opacity", "1");
-			}
-
-			function BackGournd_Vedio_Opacity() {
-				var node = $("#video");
-				node.css("opacity", "0");
-			}
-
 			var Query_Tweets_Button = document.getElementById('Query_Tweets_Button');
 			Query_Tweets_Button.onclick = Query_Tweets;
 			var Query_Author_Button = document.getElementById('Query_Author_Button');
 			Query_Author_Button.onclick = Query_Author_Tips;
+
+			$('.Tip_Link').click(function(){
+				$('div.Tip_Alert').slideToggle();
+				if($(this).html()=='Tip'){
+					$(this).html('Tip');
+				}else{
+					$(this).html('Tip');
+				}
+			})
+			$('.Tip_Close').click(function(){
+				$('div.Tip_Alert').hide();
+			})
 
 		</script>
 
