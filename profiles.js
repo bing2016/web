@@ -46,7 +46,7 @@ function profiles(query, api, response) {
 	res = response
 	if (reg.test(query) && len <= 16) {
 		console.log('on: ' + query.substring(1) + '\n\n')
-		var resObject = {user:{}, keywords:{}, tweets:[]};
+		var resObject = {user:{}};
 
 		Twitter.getProfiles(query, resObject,
 			function(resObject) {
@@ -57,8 +57,8 @@ function profiles(query, api, response) {
 
 					resObject.tweets = dbData;
 
-					var stat = Statistics.calculations(dbData);
-					resObject.keywords = stat
+					// var stat = Statistics.calculations(dbData);
+					resObject.keywords = Statistics.calculations(dbData);
 
 					Database.getRencentNum(key_id, 5,
 						function(stat){
