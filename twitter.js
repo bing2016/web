@@ -56,10 +56,11 @@ function getProfiles(query, resObject, callback) {
     var name = query.substring(1)
     client.get('users/show', { screen_name: name },
         function (err, data, response) {
-
-            resObject.user.icon = data.icon
+            console.log(data)
+            resObject.user.name = data.name
+            resObject.user.icon = data.profile_background_image_url
             resObject.user.screen_name = data.screen_name
-            resObject.user.tweets_num = data.statuses_count
+            //resObject.user.tweets_num = data.statuses_count
 
             return callback(resObject)
 
