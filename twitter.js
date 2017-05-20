@@ -58,7 +58,7 @@ function getProfiles(query, resObject, callback) {
         function (err, data, response) {
             console.log(data)
             resObject.user.name = data.name
-            resObject.user.icon = data.profile_background_image_url
+            resObject.user.icon = data.profile_image_url
             resObject.user.screen_name = data.screen_name
             //resObject.user.tweets_num = data.statuses_count
 

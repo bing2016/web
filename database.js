@@ -29,12 +29,12 @@ function add(data) {
 
 }
 
-function getRencentNum(key_id, days) {
-    queryString = 'select count(*) as num from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ?';
+function getRencentNum(key_id, days, callback) {
+    queryString = 'select count(*) as num from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ? union select count(*) from tb_tweets;';
     connection.query(queryString, [key_id], 
         function(err, rows, fields) {
                 if (err) throw err;
-                return rows[0].num;
+                return callback([rows[0].num, rows[1].num]);
             });
 }
 

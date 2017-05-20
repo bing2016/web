@@ -59,11 +59,12 @@ function getTime(str) {
 }
 
 function calculations(data) {
+    var result = {num:0, popular:[], recent:[]}
     var strs = []
     var frequency = []
     var keywords = []
     var result = []
-
+    //console.log(data[0])
     for (i in data) {
         tweet = data[i].text
         strs = tweet.split(" ")
@@ -80,8 +81,10 @@ function calculations(data) {
     //console.log(keywords)
     keysSorted = keywords.sort(function(a,b){return frequency[b]-frequency[a]})
 
+    result.number = keywords.length
+    result.popular = []
     for (i = 0; i<10; i++) {
-        result[i] = keysSorted[i]
+        result.popular[keysSorted[i]] = frequency[keysSorted[i]]
     }
     return result
 }

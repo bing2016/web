@@ -41,33 +41,37 @@ var res
 
 
 function profiles(query, api, response) { 
-    var reg = /^@/
-    var len = query.length
-    res = response
-    if (reg.test(query) && len <= 16) {
-    	console.log('on: ' + query.substring(1) + '\n\n')
-    	var resObject = {user:{}, keywords:{}, tweets:[]};
+	var reg = /^@/
+	var len = query.length
+	res = response
+	if (reg.test(query) && len <= 16) {
+		console.log('on: ' + query.substring(1) + '\n\n')
+		var resObject = {user:{}, keywords:{}, tweets:[]};
 
-    	Twitter.getProfiles(query, resObject,
-    		function(resObject) {
-    			Database.isInDatabase(query, api, function(key_id, result, dbData){
-    				Database.add(result);
-    				result.unshift(0, 0);
-    				Array.prototype.splice.apply(dbData, result);
+		Twitter.getProfiles(query, resObject,
+			function(resObject) {
+				Database.isInDatabase(query, api, function(key_id, result, dbData){
+					Database.add(result);
+					result.unshift(0, 0);
+					Array.prototype.splice.apply(dbData, result);
 
-    				resObject.tweets = dbData;
+					resObject.tweets = dbData;
 
-    				resObject.keywords = Statistics.calculations(dbData);
+					resObject.keywords = Statistics.calculations(dbData);
 
-    				resObject.user.recentTweets_num = Database.getRencentNum(key_id, 5);
+					Database.getRencentNum(key_id, 5,
+						function(stat){
+							resObject.user.recentTweets_num = stat[0]
+							resObject.user.Tweets_num = stat[1]
+							console.log(resObject)
 
+							res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'})
+							console.log('send data to view')
+							res.end(JSON.stringify(resObject))
+						})
 
-    				res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-    				console.log('send data to view');
-    				res.end(JSON.stringify(resObject));
-
-    			});
-    		})
+				});
+			})
             
                     // Statistics.createCalendar();
                     
