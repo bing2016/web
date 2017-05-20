@@ -67,7 +67,7 @@ function calculations(data) {
     for (i in data) {
         tweet = data[i].text
         strs = tweet.split(" ")
-        console.log(strs)
+        //console.log(strs)
         for (key in strs) {
             keyword = strs[key]
             if (frequency.hasOwnProperty(keyword)) frequency[keyword] += 1
@@ -77,7 +77,7 @@ function calculations(data) {
             }
         }
     }
-    console.log(keywords)
+    //console.log(keywords)
     keysSorted = keywords.sort(function(a,b){return frequency[b]-frequency[a]})
 
     for (i = 0; i<10; i++) {

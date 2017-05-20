@@ -52,7 +52,19 @@ function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callba
     }
 }
 
+function getProfiles(query, resObject, callback) {
+    var name = query.substring(1)
+    client.get('users/show', { screen_name: name },
+        function (err, data, response) {
 
+            resObject.user.icon = data.icon
+            resObject.user.screen_name = data.screen_name
+            resObject.user.tweets_num = data.statuses_count
+
+            return callback(resObject)
+
+        })
+}
 
 
 // function getTweets2(query, dbData, result, res, max_id, min_id, key_id) {
@@ -112,4 +124,10 @@ function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callba
 
 //exports.getTweets = getTweets;
 //exports.profiles = profiles;
-exports.getTweetsByAPI = getTweetsByAPI;
+exports.getTweetsByAPI = getTweetsByAPI
+exports.getProfiles = getProfiles
+
+
+
+
+

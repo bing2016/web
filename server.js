@@ -1,6 +1,7 @@
  var protocol = require('http');
  var static = require('node-static');
  var url = require('url');
+  var util = require('util');
  var file = new (static.Server)();
  var portNo = 3000;
 
@@ -44,7 +45,7 @@ var app = protocol.createServer(function (req, res) {
 //                console.log('body: ' + body);
 //                res.end(JSON.stringify(body));
 //            });
-});
+        });
     }
     else if ((req.method == 'POST') && (pathname == '/postFile11.html')) {
 
@@ -55,11 +56,14 @@ var app = protocol.createServer(function (req, res) {
             body= JSON.parse(body);
             var query= body.query;
             var api = body.api;
+            
             Profiles.profiles(query, api, res);
         });
     }
     else {
         file.serve(req, res, function (err, result) {
+        	console.log(err)
+        	console.log(req.url)
             if (err != null) {
                 console.error('Error serving %s - %s', req.url, err.message);
                 if (err.status === 404 || err.status === 500) {

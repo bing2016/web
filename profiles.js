@@ -1,5 +1,6 @@
 var Database = require('./database')
 var Statistics = require('./statistics')
+var Twitter = require('./twitter')
 
 var res;
 
@@ -18,48 +19,56 @@ var res;
 //     Database.isInDatabase(str, resp);
 // }
 
+var res
 
-function profiles(query, res) { 
+// function resp(key_id, result, dbData) {
+
+// 		Database.add(result);
+// 		result.unshift(0, 0);
+// 		Array.prototype.splice.apply(dbData, result);
+// 		resObject.tweets = dbData;
+
+// 		resObject.keywords = Statistics.calculations(data);
+
+// 		resObject.user.recentTweets_num = Database.getRencentNum(key_id, 5);
+
+
+// 		res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+// 		console.log('send data to view');
+// 		res.end(JSON.stringify(resObject));
+
+// }
+
+
+function profiles(query, api, response) { 
     var reg = /^@/
     var len = query.length
-    res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'})
-
+    res = response
     if (reg.test(query) && len <= 16) {
-            console.log('on: ' + query.substring(1) + '\n\n')
-            var name = query.substring(1)
-            client.get('users/show', { screen_name: name },
-            	function (err, data, response) {
-            		var resObject = {user:{}, keywords:{}, tweets:[]};
-            		// var resObject = {}
-            		// var resObject.user = {}
-            		resObject.user.name = data.name
-            		resObject.user.icon = data.icon
-            		resObject.user.screen_name = data.screen_name
-            		resObject.user.tweets_num = data.statuses_count
+    	console.log('on: ' + query.substring(1) + '\n\n')
+    	var resObject = {user:{}, keywords:{}, tweets:[]};
 
-            		Database.isInDatabase(query, 
-            			function(key_id, result, dbData) {
-            				Database.add(result);
-            				result.unshift(0, 0);
-            				Array.prototype.splice.apply(data, result);
-            				resObject.tweets = data;
+    	Twitter.getProfiles(query, resObject,
+    		function(resObject) {
+    			Database.isInDatabase(query, api, function(key_id, result, dbData){
+    				Database.add(result);
+    				result.unshift(0, 0);
+    				Array.prototype.splice.apply(dbData, result);
 
-            				resObject.keywords = Statistics.calculations(data);
+    				resObject.tweets = dbData;
 
-            				resObject.user.recentTweets_num = Database.getRencentNum(key_id, 5);
+    				resObject.keywords = Statistics.calculations(dbData);
+
+    				resObject.user.recentTweets_num = Database.getRencentNum(key_id, 5);
 
 
+    				res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+    				console.log('send data to view');
+    				res.end(JSON.stringify(resObject));
 
-
-            				res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-            				console.log('send data to view');
-            				res.end(JSON.stringify(resObject));
-            			});
-
-
-
-
-
+    			});
+    		})
+            
                     // Statistics.createCalendar();
                     
                     // if (data[0] == null) {
@@ -81,7 +90,6 @@ function profiles(query, res) {
                     // //data.push({statuses:{numberTweets:numberTweets, recentNumberTweets:recentNumberTweets}})
                     // //console.log(JSON.stringify(data));
                     // res.end(JSON.stringify(resObject));
-              });
     } else {
         res.end(JSON.stringify(resObject));
     }

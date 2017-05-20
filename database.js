@@ -73,7 +73,7 @@ function getRencentNum(key_id, days) {
 
 
 
-function callAPI (rows, str, key_id, api, callbackcode) {
+function callAPI (rows, str, key_id, api, callback) {
     if (rows != null && rows.length > 0) {
         min_id = rows[0].tweet_id;
     } else {
@@ -82,21 +82,21 @@ function callAPI (rows, str, key_id, api, callbackcode) {
     }
     console.log('find ' + rows.length + ' tweets in db');
 
-    Twitter.getTweetsByAPI(str, rows, [], 99999999999999999999, min_id, key_id, api, callbackcode);
+    Twitter.getTweetsByAPI(str, rows, [], 99999999999999999999, min_id, key_id, api, callback);
 
 }
 
-function addKeyword (str, api, callbackcode) {
+function addKeyword (str, api, callback) {
     var queryString = 'insert into tb_keywords (keyword, time) values (?, now())'
     connection.query(queryString, [str], 
         function(err, rows, fields) {
             if (err) throw err;
             console.log('add a new keyword : ' + str);
-            isInDatabase(str, api, callbackcode);
+            isInDatabase(str, api, callback);
         });
 }
 
-function getTweetsByDB(rows, str, api, callbackcode) {
+function getTweetsByDB(rows, str, api, callback) {
     if (rows != null && rows.length > 0) {
         key_id = rows[0]['id']; 
         console.log('keyword_id : ' + key_id);
@@ -105,31 +105,31 @@ function getTweetsByDB(rows, str, api, callbackcode) {
         connection.query(queryString, [key_id], 
             function(err, rows, fields) {
                 if (err) throw err;
-                callAPI(rows, str, key_id, api, callbackcode)
+                callAPI(rows, str, key_id, api, callback)
             });
         
     } else {
         console.log('keyword : ' + str + ' cannot find in db')
-        addKeyword(str, api, callbackcode);
+        addKeyword(str, api, callback);
     }
 }
 
 function isInDatabase(keyword, api, callback) {
-    callbackcode = callback;
     str = keyword;
     var queryString = 'select id from tb_keywords where keyword = ?';
     connection.query(queryString, [str], 
         function(err, rows, fields) {
             if (err) throw err;
-            getTweetsByDB(rows, str, api, callbackcode);
+            getTweetsByDB(rows, str, api, callback);
         });
 }
 
 
-var connection = newConnection();
-connection.connect();
-exports.isInDatabase = isInDatabase;
-exports.add = add;
+var connection = newConnection()
+connection.connect()
+exports.isInDatabase = isInDatabase
+exports.getRencentNum = getRencentNum
+exports.add = add
 
 
 
