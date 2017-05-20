@@ -58,7 +58,7 @@ function profiles(query, api, response) {
 					resObject.tweets = dbData;
 
 					var stat = Statistics.calculations(dbData);
-					resObject.keywords = console.log(a)
+					resObject.keywords = stat
 
 					Database.getRencentNum(key_id, 5,
 						function(stat){
