@@ -64,6 +64,7 @@ function calculations(data) {
     var frequency = []
     var keywords = []
     var result = []
+    var normalwords = ['RT','the', 'of', 'new', 'is', 'to']
     //console.log(data[0])
     for (i in data) {
         tweet = data[i].text
@@ -71,6 +72,9 @@ function calculations(data) {
         //console.log(strs)
         for (key in strs) {
             keyword = strs[key]
+            if (normalwords.indexOf(keyword) >= 0) {
+                continue
+            } 
             if (frequency.hasOwnProperty(keyword)) frequency[keyword] += 1
             else {
                 frequency[keyword] = 0
@@ -78,6 +82,8 @@ function calculations(data) {
             }
         }
     }
+
+
     //console.log(keywords)
     keysSorted = keywords.sort(function(a,b){return frequency[b]-frequency[a]})
 
@@ -86,8 +92,10 @@ function calculations(data) {
     for (i = 0; i<10; i++) {
         result.popular[keysSorted[i]] = frequency[keysSorted[i]]
     }
+    console.log(result)
     return result
 }
+
 exports.getDate = getDate
 exports.getTime = getTime
 exports.calculations =calculations

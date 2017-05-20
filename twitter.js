@@ -33,7 +33,6 @@ function formatData(data) {
 
 function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callback) {
     if (api == 'on') {
-        console.log('aaaaa')
         client.get('search/tweets', { q: str, count: 3, max_id: max_id, since_id:min_id},
             function (err, data, response) {
                 var tweets = formatData(data);
@@ -47,7 +46,6 @@ function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callba
             });
     }
     else {
-        console.log('bbbbbb')
         return callback(key_id, [], dbData);
     }
 }

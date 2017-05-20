@@ -56,14 +56,12 @@ var app = protocol.createServer(function (req, res) {
             body= JSON.parse(body);
             var query= body.query;
             var api = body.api;
-            
+
             Profiles.profiles(query, api, res);
         });
     }
     else {
         file.serve(req, res, function (err, result) {
-        	console.log(err)
-        	console.log(req.url)
             if (err != null) {
                 console.error('Error serving %s - %s', req.url, err.message);
                 if (err.status === 404 || err.status === 500) {

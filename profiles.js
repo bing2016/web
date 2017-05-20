@@ -62,8 +62,7 @@ function profiles(query, api, response) {
 					Database.getRencentNum(key_id, 5,
 						function(stat){
 							resObject.user.recentTweets_num = stat[0]
-							resObject.user.Tweets_num = stat[1]
-							console.log(resObject)
+							resObject.user.tweets_num = stat[1]
 
 							res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'})
 							console.log('send data to view')
