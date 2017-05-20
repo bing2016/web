@@ -45,7 +45,7 @@ window.onscroll = function (){
 		marginBot=J-I-K;
 	}
 	if(marginBot<=0) {
-		scroll(0,0);
+		// scroll(0,0);
 	}
 }
 

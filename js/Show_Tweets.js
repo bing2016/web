@@ -8,7 +8,7 @@ function init_UserProFile_Table (data) {
 
 	html += '<div class=" w3-panel w3-light-grey w3-round w3-border" style="overflow:hidden">'
 
-	html += '<a class="w3-btn" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')" ><table><td><img style="height:50px" src="' + User.icon + 
+	html += '<a class="w3-btn" style="margin-top:1%" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')" ><table><td><img style="height:50px" src="' + User.icon + 
 	'"></td><td><div><font style="color: black" size="4"> ' + User.name + '</font><br><font class="w3-left" style="color: grey;" size="3">' + '  @' + User.screen_name + '. </font></div></td></table></a>'
 
 	html += '<div id="map" style="width:90%;height:100px;margin-left:5%;margin-top:5px"></div>';
