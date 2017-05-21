@@ -63,7 +63,7 @@ function init_UserProFile_Table (data) {
 // 	$('#TweetList').append(html);
 // }
 
-function init_Tweets_Table (data, calendar) {
+function init_Tweets_Table (data) {
 
 	var ret = JSON.stringify(data);
 	var twit = JSON.parse(ret).tweets;
@@ -82,7 +82,7 @@ function init_Tweets_Table (data, calendar) {
 			var obj = twit[i];
 			// console.log(obj);
 
-			addRecent(obj.date, calendar);
+		//	addRecent(obj.date);
 
 			html += '<div class=" w3-panel w3-light-grey w3-round w3-border" onclick="openpage(\'https://twitter.com/' + obj.screen_name + '/status/' + obj.link_id + ' \')" style="overflow:hidden;padding:10px">'
 

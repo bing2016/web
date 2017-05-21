@@ -150,7 +150,8 @@
 						$("#TweetList").empty();
 						$("#User_Profile").empty();
 						var calendar = creatCalendar()
-						init_Tweets_Table(data, calendar);
+						console.log(calendar);
+						init_Tweets_Table(data);
 						
 						var arr1 = new Array();
 						var arr2 = new Array();
@@ -161,8 +162,6 @@
 						}
 						//var arr1 = [day7,day6,day5,day4,day3,day2,day1];
 						//var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
-						console.log(arr1);
-						console.log(arr2);
 						initChart(arr1, arr2);
 
 					},
