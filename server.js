@@ -40,11 +40,11 @@ var app = protocol.createServer(function (req, res) {
             Query.query(queryString, api, res)
                     
 
-//            waitCallBack(5000, function () {
-//                res.writeHead(200, {"Content-Type": "text/plain"});
-//                console.log('body: ' + body);
-//                res.end(JSON.stringify(body));
-//            });
+           waitCallBack(5000, function () {
+               res.writeHead(200, {"Content-Type": "text/plain"});
+               console.log('body: ' + body);
+               res.end(JSON.stringify(body));
+           });
         });
     }
     // listen the profile button
@@ -62,18 +62,7 @@ var app = protocol.createServer(function (req, res) {
             Profiles.profiles(query, api, res);
         });
     }
-    // else if ((req.method == 'POST') && (pathname == '/postFile12.html')) {
 
-    //     req.on('data', function (data) {
-    //         body += data;
-    //     });
-    //     req.on('end', function () {
-    //         body= JSON.parse(body);
-    //         var query= body.query;
-
-    //         Streams.streams(query, api, res);
-    //     });
-    // }
     // listen other condition
     else {
         file.serve(req, res, function (err, result) {

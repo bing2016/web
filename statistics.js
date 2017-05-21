@@ -49,7 +49,7 @@ function calculations(data) {
             //calculate frequency
             if (frequency.hasOwnProperty(keyword)) frequency[keyword] += 1
             else {
-                frequency[keyword] = 0
+                frequency[keyword] = 1
                 keywordslist.push(keyword)
             }
         }
@@ -62,7 +62,7 @@ function calculations(data) {
     result.number = keywordslist.length
     result.list = ''
     for (i = 0; i<10; i++) {
-        if (keysSorted.length < i) {
+        if (keysSorted.length <= i) {
             break
         }
         result.list += keysSorted[i] + ':(' + frequency[keysSorted[i]] + '), '
