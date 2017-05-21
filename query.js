@@ -1,17 +1,41 @@
 var Database = require('./database')
 
-function query(str, api, response) {
+function resp(result, dbData, res, key_id) {
+    Database.getStatic(key_id, 7, function(rows){
+        var statictics = []
+        for (i in rows) {
+            statictics[rows[i].date] = rows[i].num
+        }
+        console.log(statictics)
+        result.unshift(0, 0);
+        Array.prototype.splice.apply(dbData, result);
+
+        var resObject = {'tweets':dbData, 'statictics':statictics};
+        res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
+        res.end(JSON.stringify(resObject));
+        console.log('send data to view');
+    })
+}
+
+/**
+ * start a query
+ * @param  {string} query word
+ * @param  {string} whether only query in DB
+ * @param  {object} the respond of serve
+ */
+ function query(str, api, response) {
     res = response;
     console.log('start a tweets search');
     Database.isInDatabase(str, api, 
         function(key_id, result, dbData){
-            if (result.length != 0) Database.add(result, function(){});
-            result.unshift(0, 0);
-            Array.prototype.splice.apply(dbData, result);
-            res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-            console.log('send data to view');
-            var resObject = {tweets:dbData};
-            res.end(JSON.stringify(resObject));
+            //add tweets to DB
+            if (result.length != 0) {
+                Database.add(result, function(){
+                    resp(result, dbData, res, key_id)
+                });
+            } else {
+                resp(result, dbData, res, key_id)
+            }
         });
 }
 

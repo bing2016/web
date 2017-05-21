@@ -8,13 +8,16 @@
 });
 
 
-
+/**
+ * @param  {Array} tweets list
+ * @return {Array} formated tweets list
+ */
 function formatData(data) {
     var tweets = [];
 
     for (var index in data.statuses) {
         var tweetOri = data.statuses[index];
-
+        //get usesful information from data
         var tweet = {
             name:tweetOri.user.name, 
             icon:tweetOri.user.profile_image_url, 
@@ -25,7 +28,7 @@ function formatData(data) {
             text:tweetOri.text,
             tweet_id:tweetOri.id
         };
-        console.log(tweetOri.geo)
+        //add the geographical information
         if (tweetOri.geo != null) {
             tweet.coordinates1=tweetOri.geo.coordinates[0]
             tweet.coordinates2=tweetOri.geo.coordinates[1]
@@ -39,14 +42,30 @@ function formatData(data) {
     return tweets;
 }
 
-function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callback) {
+
+/**
+ * @param  {string} query word
+ * @param  {Array} the tweets list form DB
+ * @param  {Array} the tweets list form API
+ * @param  {int} max tweets id
+ * @param  {int} min tweets id
+ * @param  {int} query words id
+ * @param  {string} whether only query in DB
+ * @param  {int} the number of loop
+ * @param  {Function}
+ * @return {[type]}
+ */
+function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, i, callback) {
     if (api == 'on') {
         client.get('search/tweets', { q: str, count: 3, max_id: max_id, since_id:min_id},
             function (err, data, response) {
+                //format the tweets
                 var tweets = formatData(data);
                 Array.prototype.push.apply(result, tweets);
-                if (data.statuses !=null && data.statuses.length == 3 && max_id == 99999999999999999999) {
-                    getTweetsByAPI(str, dbData, result, tweets[data.statuses.length-1].tweet_id-100, min_id, key_id, api, callback);
+                if (data.statuses !=null && data.statuses.length == 3 && i < 2) {
+                    i += 1
+                    // if there are more date call the API again till have 300 tweets
+                    getTweetsByAPI(str, dbData, result, tweets[data.statuses.length-1].tweet_id-100, min_id, key_id, api, i, callback);
 
                 } else { 
                     return callback(key_id, result, dbData);
@@ -58,6 +77,12 @@ function getTweetsByAPI(str, dbData, result, max_id, min_id, key_id, api, callba
     }
 }
 
+/**
+ * call API to get user information
+ * @param  {string} query word
+ * @param  {object} the information will send to view
+ * @param  {Function}
+ */
 function getProfiles(query, resObject, callback) {
     var name = query.substring(1)
     client.get('users/show', { screen_name: name },
@@ -74,63 +99,6 @@ function getProfiles(query, resObject, callback) {
 }
 
 
-// function getTweets2(query, dbData, result, res, max_id, min_id, key_id) {
-
-//     client.get('search/tweets', { q: query, count: 3, max_id: max_id, since_id:min_id},
-//         function (err, data, response) {
-
-//                 var tweets = [];
-//                 for (var index in data.statuses) {
-//                     var tweetOri = data.statuses[index];
-//                     var tweet = {name:tweetOri.user.name, 
-//                                  icon:tweetOri.user.profile_image_url, 
-//                                  screen_name: tweetOri.user.screen_name, 
-//                                  date: Statistics.getDate(tweetOri.created_at), 
-//                                  time: Statistics.getTime(tweetOri.created_at), 
-//                                  link_id:tweetOri.id_str, 
-//                                  text:tweetOri.text,
-//                                  coordinates:tweetOri.text,
-//                                  tweet_id:tweetOri.id};
-//                     tweets[index] = tweet;
-//                 }
-
-//                 Array.prototype.push.apply(result, tweets);
-
-//             if (data.statuses.length == 3 && max_id == 99999999999999999999) {
-//                 //console.log(tweets);
-//                 getTweets2(query, dbData, result, res, tweets[data.statuses.length-1].tweet_id-100, min_id, key_id);
-
-//             } else {
-//                 Database.add(query, key_id, result);
-//                 result.unshift(0, 0);
-//                 Array.prototype.splice.apply(dbData, result); 
-//                 res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-//                 res.end(JSON.stringify(dbData));
-//             }
-//     });
-
-// }
-
-
-
-// function getTweets(query, res) {
-//     client.get('search/tweets', { q: query, count: 3 },
-//         function (err, data, response) {
-//             res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'});
-
-//             for (var indx in data.statuses) {
-//                 var tweet = data.statuses[indx];
-//                 //console.log('on: ' + tweet.created_at + ' : @' + addslashes(tweet.user.screen_name) + ' : ' + addslashes(tweet.text) + '\n\n');
-//                 console.log(JSON.stringify(tweet.id));
-//             }
-//             res.end(JSON.stringify(data));
-//         });
-// }
-
-
-
-//exports.getTweets = getTweets;
-//exports.profiles = profiles;
 exports.getTweetsByAPI = getTweetsByAPI
 exports.getProfiles = getProfiles
 

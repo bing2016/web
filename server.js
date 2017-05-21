@@ -1,7 +1,7 @@
  var protocol = require('http');
  var static = require('node-static');
  var url = require('url');
-  var util = require('util');
+var util = require('util');
  var file = new (static.Server)();
  var portNo = 3000;
 
@@ -25,6 +25,7 @@ function waitCallBack(param1, callback) {
 var app = protocol.createServer(function (req, res) {
     var pathname = url.parse(req.url).pathname;
     var body = '';
+    // listen the query button
     if ((req.method == 'POST') && (pathname == '/postFile.html')) {
 
         req.on('data', function (data) {
@@ -32,11 +33,10 @@ var app = protocol.createServer(function (req, res) {
         });
         req.on('end', function () {
             body= JSON.parse(body);
-
+            // get query words
             var queryString = body.query;
             var api = body.api;
 
-            //Database.getTweets(queryString, res);
             Query.query(queryString, api, res)
                     
 
@@ -47,6 +47,7 @@ var app = protocol.createServer(function (req, res) {
 //            });
         });
     }
+    // listen the profile button
     else if ((req.method == 'POST') && (pathname == '/postFile11.html')) {
 
         req.on('data', function (data) {
@@ -54,12 +55,26 @@ var app = protocol.createServer(function (req, res) {
         });
         req.on('end', function () {
             body= JSON.parse(body);
+            // get query words
             var query= body.query;
             var api = body.api;
 
             Profiles.profiles(query, api, res);
         });
     }
+    // else if ((req.method == 'POST') && (pathname == '/postFile12.html')) {
+
+    //     req.on('data', function (data) {
+    //         body += data;
+    //     });
+    //     req.on('end', function () {
+    //         body= JSON.parse(body);
+    //         var query= body.query;
+
+    //         Streams.streams(query, api, res);
+    //     });
+    // }
+    // listen other condition
     else {
         file.serve(req, res, function (err, result) {
             if (err != null) {

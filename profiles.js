@@ -4,16 +4,27 @@ var Twitter = require('./twitter')
 
 var res;
 
+/**
+ * return the data to view
+ * @param  {Array} the tweets list form API
+ * @param  {Array} the tweets list form DB
+ * @param  {object} the information will send to view
+ * @param  {object} the respond of serve
+ * @param  {int} the id of query word
+ */
 function resp(result, dbData, resObject, res, key_id) {
 	result.unshift(0, 0);
 	Array.prototype.splice.apply(dbData, result);
 
+	//get the total statistics for chart
 	var calculation = Statistics.calculations(dbData)
 	resObject.keywords.number = calculation.number
 	resObject.keywords.popular = calculation.list
 
+	//add tweets to DB
 	Database.getRecentTweets(key_id, 7, 
 		function(row){
+			//get the recent statistics for chart
 			var calculation_rec = Statistics.calculations(row)
 			resObject.keywords.recent = calculation.list	
 			resObject.tweets = dbData;
@@ -31,8 +42,14 @@ function resp(result, dbData, resObject, res, key_id) {
 		})
 }
 
-
+/**
+ * start a profile query
+ * @param  {string} query word
+ * @param  {string} whether only query in DB
+ * @param  {object} the respond of serve
+ */
 function profiles(query, api, response) { 
+	// only query the word begin with '@' less 16
 	var reg = /^@/
 	var len = query.length
 	res = response
@@ -40,10 +57,11 @@ function profiles(query, api, response) {
 		console.log('on: ' + query.substring(1) + '\n\n')
 		var resObject = {user:{}, keywords:{}};
 
+		//call getProfiles function to get the frofiles
 		Twitter.getProfiles(query, resObject,
 			function(resObject) {
 				Database.isInDatabase(query, api, function(key_id, result, dbData){
-					//console.log(result)
+					//if no date from API, do not call add function
 					if (result.length != 0) {
 						Database.add(result, function() {
 							resp(result, dbData, resObject, res, key_id)
