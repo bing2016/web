@@ -12,7 +12,7 @@ function init_UserProFile_Table (data) {
 	html += '<a class="w3-btn" style="margin-top:1%" onclick="openpage(\'https://twitter.com/' + User.screen_name + ' \')" ><table><td><img style="height:50px" src="' + User.icon + 
 	'"></td><td><div><font style="color: black" size="4"> ' + User.name + '</font><br><font class="w3-left" style="color: grey;" size="3">' + '  @' + User.screen_name + '. </font></div></td></table></a>'
 
-	html += '<div id="map" style="width:90%;height:300px;margin-left:3%;margin-top:5px"></div>';
+	html += '<div id="map" style="width:90%;height:200px;margin-left:3%;margin-top:5px"></div>';
 
 	html += '<p style="margin-left:3%;font-size:14px">Total number of Tweets: ' + User.tweets_num + '</p>';
 
