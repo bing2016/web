@@ -22,7 +22,8 @@ function formatData(data) {
             time: Statistics.getTime(tweetOri.created_at), 
             link_id:tweetOri.id_str, 
             text:tweetOri.text,
-            coordinates:tweetOri.coordinates,
+            coordinates1:tweetOri.geo.coordinates[0],
+            coordinates2:tweetOri.geo.coordinates[1],
             tweet_id:tweetOri.id
         };
         tweets[index] = tweet;
