@@ -56,53 +56,38 @@ function profiles(query, api, response) {
 
 						result.unshift(0, 0);
 						Array.prototype.splice.apply(dbData, result);
-
+        
 						var calculation = Statistics.calculations(dbData)
 						resObject.keywords.number = calculation.number
-						resObject.keywords.popular = calculation.popular
+						resObject.keywords.popular = calculation.list
 
+						Database.getRecentTweets(key_id, 7, 
+							function(row){
+								var calculation_rec = Statistics.calculations(row)
+								resObject.keywords.recent = calculation.list	
+								resObject.tweets = dbData;
 
-						resObject.tweets = dbData;
+								Database.getRencentNum(key_id, 5,
+									function(stat){
+										resObject.user.recentTweets_num = stat[0]
+										resObject.user.tweets_num = stat[1]
 
-						Database.getRencentNum(key_id, 5,
-							function(stat){
-								resObject.user.recentTweets_num = stat[0]
-								resObject.user.tweets_num = stat[1]
+										res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'})
+										console.log('send data to view')
+										//console.log(resObject)
+										res.end(JSON.stringify(resObject))
+									})	
 
-								res.writeHead(200, { "Content-Type": "application/json", 'Access-Control-Allow-Origin' : '*'})
-								console.log('send data to view')
-								console.log(resObject)
-								res.end(JSON.stringify(resObject))
 							})
+
 					});
 
 				});
 			})
 
-                    // Statistics.createCalendar();
-                    
-                    // if (data[0] == null) {
-                    //     res.end(JSON.stringify(resObject))
-                    // } else {
-                    //     resObject.user.name = data[0].user.name;
-                    //     resObject.user.icon = data[0].user.profile_image_url;
-                    //     resObject.user.screen_name = data[0].user.screen_name;
-                        
-                    //     for (var index in data) {
-                    //         resObject.user.numberTweets += 1;
-                    //         if (Statistics.isRecent(data[index].created_at)) resObject.user.recentNumberTweets += 1;
-                    //         resObject.user.coordinates[index] = data[index].coordinates;
-
-                    //         var tweet = {time:data[index].created_at, id:data[index].link_id, text:data[index].text}
-                    //         resObject.tweets[index] = tweet;
-                    // }
-
-                    // //data.push({statuses:{numberTweets:numberTweets, recentNumberTweets:recentNumberTweets}})
-                    // //console.log(JSON.stringify(data));
-                    // res.end(JSON.stringify(resObject));
-    } else {
-        res.end(JSON.stringify(resObject));
-    }
+	} else {
+		res.end(JSON.stringify(resObject));
+	}
 
 }
 

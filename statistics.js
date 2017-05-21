@@ -1,8 +1,7 @@
 
 // var monthObject = {Jan:1, Feb:2, Mar:3, Apr:4, May:5, Jun:6, Jul:7, Aug:8, Sep:9, Oct:10, Nov:11, Dec:12}
-// var tweetCount = [];
 
-// function GetDateStr(AddDayCount) { 
+// function getDateStr(AddDayCount) { 
 //     var dd = new Date(); 
 //     dd.setDate(dd.getDate()+AddDayCount);
 //     var y = dd.getFullYear(); 
@@ -12,13 +11,15 @@
 // } 
 
 // function createCalendar() {
-// 	tweetCount[GetDateStr(0)] = 0;
-// 	tweetCount[GetDateStr(-1)] = 0;
-// 	tweetCount[GetDateStr(-2)] = 0;
-// 	tweetCount[GetDateStr(-3)] = 0;
-// 	tweetCount[GetDateStr(-4)] = 0;
-// 	tweetCount[GetDateStr(-5)] = 0;
-// 	tweetCount[GetDateStr(-6)] = 0;
+//     var tweetCount = [];
+// 	tweetCount[getDateStr(0)] = 0;
+// 	tweetCount[getDateStr(-1)] = 0;
+// 	tweetCount[getDateStr(-2)] = 0;
+// 	tweetCount[getDateStr(-3)] = 0;
+// 	tweetCount[getDateStr(-4)] = 0;
+// 	tweetCount[getDateStr(-5)] = 0;
+// 	tweetCount[getDateStr(-6)] = 0;
+//     return tweetCount
 // }
 
 // function addRecent(str) {
@@ -59,12 +60,13 @@ function getTime(str) {
 }
 
 function calculations(data) {
-    var result = {'number':0, 'popular':'', 'recent':''}
+    var result = {}
     var strs = []
     var frequency = []
     var keywordslist = []
     var result = []
     var normalwords = ['RT','the', 'of', 'new', 'is', 'to']
+    var frequency_recent = []
 
     for (i in data) {
         tweet = data[i].text
@@ -88,9 +90,9 @@ function calculations(data) {
     keysSorted = keywordslist.sort(function(a,b){return frequency[b]-frequency[a]})
 
     result.number = keywordslist.length
-    result.popular = ''
+    result.list = ''
     for (i = 0; i<10; i++) {
-        result.popular += keysSorted[i] + ':(' + frequency[keysSorted[i]] + '), '
+        result.list += keysSorted[i] + ':(' + frequency[keysSorted[i]] + '), '
     }
 
     return result

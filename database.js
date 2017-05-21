@@ -28,17 +28,22 @@ function add(data, callback) {
             console.log('add ' + data.length + ' tweets to db')
             return callback()
         });
-    
+}
 
+function getRecentTweets(key_id, days, callback) {
+ queryString = 'select * from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ?';
+    connection.query(queryString, [key_id], 
+        function(err, rows, fields) {
+                if (err) throw err;
+                return callback(rows);
+            });
 }
 
 function getRencentNum(key_id, days, callback) {
-    console.log(key_id)
     queryString = 'select count(*) as num, (select count(*) from tb_tweets) as total from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ?';
     connection.query(queryString, [key_id], 
         function(err, rows, fields) {
                 if (err) throw err;
-                console.log(rows)
                 return callback([rows[0].num, rows[0].total]);
             });
 }
@@ -134,6 +139,7 @@ var connection = newConnection()
 connection.connect()
 exports.isInDatabase = isInDatabase
 exports.getRencentNum = getRencentNum
+exports.getRecentTweets = getRecentTweets
 exports.add = add
 
 
