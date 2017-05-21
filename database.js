@@ -15,12 +15,12 @@ function newConnection() {
 
 function add(data, callback) {
 
-    queryString = 'insert into tb_tweets(key_id, name, screen_name, link_id, icon, date, time, text, tweet_id, coordinates) values ?'
+    queryString = 'insert into tb_tweets(key_id, name, screen_name, link_id, icon, date, time, text, tweet_id, coordinates1, coordinates2) values ?'
     var valueslist = []
     for (i in data) {
         // queryString += '(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, now())'
         valueslist.push([key_id, data[i].name, data[i].screen_name, data[i].link_id, data[i].icon, 
-            data[i].date, data[i].time, data[i].text, data[i].tweet_id, data[i].coordinates])
+            data[i].date, data[i].time, data[i].text, data[i].tweet_id, data[i].coordinates1, data[i].coordinates2])
     }
     connection.query(queryString, [valueslist],
         function(err, rows, fields) {
