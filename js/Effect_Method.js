@@ -31,23 +31,23 @@ function BackGournd_Vedio_Opacity() {
 	node.css("display", "none");
 }
 
-window.onscroll = function (){
-	var marginBot = 0;
-	if (document.documentElement.scrollTop){
-		var X=document.documentElement.scrollHeight;
-		var Y=document.documentElement.scrollTop+document.body.scrollTop;
-		var Z=document.documentElement.clientHeight;
-		marginBot=X-Y-Z;
-	} else {
-		var J=document.body.scrollHeight;
-		var I=document.body.scrollTop;
-		var K=document.body.clientHeight;
-		marginBot=J-I-K;
-	}
-	if(marginBot<=0) {
-		// scroll(0,0);
-	}
-}
+// window.onscroll = function (){
+// 	var marginBot = 0;
+// 	if (document.documentElement.scrollTop){
+// 		var X=document.documentElement.scrollHeight;
+// 		var Y=document.documentElement.scrollTop+document.body.scrollTop;
+// 		var Z=document.documentElement.clientHeight;
+// 		marginBot=X-Y-Z;
+// 	} else {
+// 		var J=document.body.scrollHeight;
+// 		var I=document.body.scrollTop;
+// 		var K=document.body.clientHeight;
+// 		marginBot=J-I-K;
+// 	}
+// 	if(marginBot<=0) {
+// 		// 	
+// 	}
+// }
 
 function changevalue(){
 	var add_type=document.getElementById("add_type");
