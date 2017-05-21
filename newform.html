@@ -14,7 +14,6 @@
 	<script src="./js/Map.js" type="text/javascript"></script>
 	<script src="./js/Show_Tweets.js" type="text/javascript"></script>
 	<script src="./js/myChart.js" type="text/javascript"></script>
-	<script src="./js/count.js" type="text/javascript"></script>
 
 	<style type="text/css">
 
@@ -57,7 +56,7 @@
 								<a class="Tip_Link" href="javascript:void(0)"  style="color: white">Tip</a>&emsp;
 								<label style="color: white">Using DataBase: </label><input name="api" id="add_type" type="checkbox" class="w3-check" value="on" checked="checked" onclick="changevalue();" />
 								<button class="w3-border w3-border-white w3-btn w3-black" id="Query_Tweets_Button">Query By Tweets</button>&emsp;
-								<button class="w3-border w3-border-white w3-btn w3-black" id="Query_Author_Button">Query By @Author</button>
+								<button class="w3-border w3-border-white w3-btn w3-black" id="Query_Author_Button">Query ProFile</button>
 								<!-- <button class="w3-border w3-border-white w3-btn w3-black" id="Query_Test_Button">Query By Test</button> -->
 							</form>
 						</div>
@@ -147,22 +146,14 @@
 					type: 'POST',
 					success: function (data) {
 
+						var ret = JSON.stringify(data);
+						var statistics = JSON.parse(ret).statictics;
+						var twit = JSON.parse(ret).tweets;
+
 						$("#TweetList").empty();
 						$("#User_Profile").empty();
-						var calendar = creatCalendar()
-						console.log(calendar);
-						init_Tweets_Table(data);
-						
-						var arr1 = new Array();
-						var arr2 = new Array();
-
-						for (i in calendar) {
-							arr1.push(i);
-							arr2.push(calendar[i]);
-						}
-						//var arr1 = [day7,day6,day5,day4,day3,day2,day1];
-						//var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
-						initChart(arr1, arr2);
+						init_Tweets_Table(twit);
+						initChart(statistics);
 
 					},
 					error: function (xhr, status, error) {
@@ -186,11 +177,16 @@
 							node.css("display", "block");
 						}
 						else{
+							var Tweets = JSON.parse(ret).tweets;
+							var User = JSON.parse(ret).user;
+							var keywords = JSON.parse(ret).keywords;
+
 							$("#User_Profile").empty();
 							$("#TweetList").empty();
-							init_UserProFile_Table(data);
-							init_Tweets_Table(data);
-							create_Map(data);
+
+							init_UserProFile_Table(User, keywords);
+							init_Tweets_Table(Tweets);
+							create_Map(Tweets);
 						}
 					},
 					error: function (xhr, status, error) {
@@ -200,31 +196,6 @@
 				});
 
 			}
-
-			// function Send_Tweets_Query_Text(url, data) {
-			// 	$.ajax({
-			// 		url: 'http://127.0.0.1:3000/' + url,
-			// 		dataType: "json",
-			// 		data: data,
-			// 		type: 'POST',
-			// 		success: function (data) {
-
-			// 			$("#TweetList").empty();
-			// 			$("#User_Profile").empty();
-
-			// 			init_Tweets_Table(data);
-						
-			// 			var arr1 = [day7,day6,day5,day4,day3,day2,day1];
-			// 			var arr2 = [tweetCount[day7],tweetCount[day6],tweetCount[day5],tweetCount[day4],tweetCount[day3],tweetCount[day2],tweetCount[day1]];
-			// 			initChart(arr1, arr2);
-
-			// 		},
-			// 		error: function (xhr, status, error) {
-
-			// 			console.log('Error: ' + error.message);
-			// 		},
-			// 	});
-			// }
 
 			$.fn.serializeObject = function () {
 				var o = {};
@@ -252,11 +223,6 @@
 				Send_Author_Query('postFile11.html', JSON.stringify($('form').serializeObject()));
 			}
 
-			// function Query_Test() {
-			// 	var form = document.getElementById('myForm');
-			// 	Send_Tweets_Query_Text('postFile12.html', JSON.stringify($('form').serializeObject()));
-			// }
-
 			function Query_Author_Tips() {
 				var form = document.getElementById('myForm');
 				var Query_Author_Button = $('form').serializeObject().query;
@@ -280,9 +246,6 @@
 			Query_Tweets_Button.onclick = Query_Tweets;
 			var Query_Author_Button = document.getElementById('Query_Author_Button');
 			Query_Author_Button.onclick = Query_Author_Tips;
-
-			// var Query_Test_Button = document.getElementById('Query_Test_Button');
-			// Query_Author_Button.onclick = Query_Text;
 
 			$('.Tip_Link').click(function(){
 				$('div.Tip_Alert').slideToggle();

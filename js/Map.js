@@ -1,8 +1,5 @@
-function create_Map(data){
-	var ret = JSON.stringify(data);
-	var Tweets = JSON.parse(ret).tweets;
-	//var Geo = Tweets.coordinates;
-	console.log(ret);
+function create_Map(Tweets){
+
 	var mapType = google.maps.MapTypeId.ROADMAP;
 	var lat = 53.508742, lng = -2.120850, zoom = 5;
 	var mapOptions = {
