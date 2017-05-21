@@ -4,9 +4,13 @@ function resp(result, dbData, res, key_id) {
     Database.getStatic(key_id, 7, function(rows){
         var statictics = []
         for (i in rows) {
-            statictics[rows[i].date] = rows[i].num
+            var sta = {}
+            sta.date = rows[i].date
+            sta.value = rows[i].num
+            statictics.push(sta)
+            //statictics[rows[i].date] = rows[i].num
         }
-        console.log(statictics)
+
         result.unshift(0, 0);
         Array.prototype.splice.apply(dbData, result);
 
