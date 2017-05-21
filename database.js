@@ -25,10 +25,12 @@ function add(data, callback) {
     connection.query(queryString, [valueslist],
         function(err, rows, fields) {
             if (err) throw err;
-            console.log('add ' + data.length + ' tweets to db')
+            console.log('add  data tweets to db')
             return callback()
         });
 }
+
+
 
 function getRecentTweets(key_id, days, callback) {
  queryString = 'select * from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ?';
@@ -40,7 +42,7 @@ function getRecentTweets(key_id, days, callback) {
 }
 
 function getRencentNum(key_id, days, callback) {
-    queryString = 'select count(*) as num, (select count(*) from tb_tweets) as total from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date and key_id = ?';
+    queryString = 'select count(*) as num, (select count(*) from tb_tweets) as total from tb_tweets where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <date and key_id = ?';
     connection.query(queryString, [key_id], 
         function(err, rows, fields) {
                 if (err) throw err;
@@ -48,40 +50,9 @@ function getRencentNum(key_id, days, callback) {
             });
 }
 
-// function getTweets(str, res) {
-//     var queryString = 'select id from tb_keywords where keyword = ?'
-//     connection.query(queryString, [str], 
-//         function(err, rows, fields) {
-//             if (err) throw err;
-//             if (rows != null && rows.length > 0) {
-//                 var queryString = 'SELECT * FROM tb_tweets WHERE key_id = ? order by tweet_id desc'
-//                 var key_id = rows[0]['id']; 
-//                 connection.query(queryString, [key_id], 
-//                     function(err, rows, fields) {
-//                         if (rows != null && rows.length > 0) {
-//                             min_id = rows[0].tweet_id;
-//                         } else {
-//                             rows = [];
-//                             min_id = 0;
-//                         }
+// function getStatics() {
 
-//                         Twitter.getTweets2(str, rows, [], res, 99999999999999999999, min_id, key_id);
-
-//                     });
-//             } else {
-//                 var queryString = 'insert into tb_keywords (keyword, time) values (?, now())'
-//                 connection.query(queryString, [str], 
-//                     function(err, rows, fields) {
-//                         if (err) throw err;
-//                         getTweets(str, res);
-//                         //console.log('add to keywords');
-//                     });
-
-//             }
-//         });
 // }
-
-
 
 function callAPI (rows, str, key_id, api, callback) {
     if (rows != null && rows.length > 0) {
@@ -91,7 +62,7 @@ function callAPI (rows, str, key_id, api, callback) {
         min_id = 0;
     }
     console.log('find ' + rows.length + ' tweets in db');
-
+    console.log(rows)
     Twitter.getTweetsByAPI(str, rows, [], 99999999999999999999, min_id, key_id, api, callback);
 
 }
@@ -111,7 +82,7 @@ function getTweetsByDB(rows, str, api, callback) {
         key_id = rows[0]['id']; 
         console.log('keyword_id : ' + key_id);
 
-        var queryString = 'SELECT * FROM tb_tweets WHERE key_id = ? order by tweet_id desc'
+        var queryString = 'SELECT id, key_id, name, screen_name, icon, link_id, tweet_id, text, FROM_UNIXTIME(date, \'%Y-%c-%d\' ) as post_date, time, coordinates FROM tb_tweets WHERE key_id = ? order by tweet_id desc'
         connection.query(queryString, [key_id], 
             function(err, rows, fields) {
                 if (err) throw err;
