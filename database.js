@@ -82,10 +82,11 @@ function getTweetsByDB(rows, str, api, callback) {
         key_id = rows[0]['id']; 
         console.log('keyword_id : ' + key_id);
 
-        var queryString = 'SELECT id, key_id, name, screen_name, icon, link_id, tweet_id, text, date, time, coordinates1, coordinates2 FROM tb_tweets WHERE key_id = ? order by tweet_id desc'
-        connection.query(queryString, [key_id], 
+        var queryString = 'SELECT id, key_id, name, screen_name, icon, link_id, tweet_id, text, DATE_FORMAT(date, ?) as date, time, coordinates1, coordinates2 FROM tb_tweets WHERE key_id = ? order by tweet_id desc'
+        connection.query(queryString, ['%Y-%m-%d', key_id], 
             function(err, rows, fields) {
                 if (err) throw err;
+
                 callAPI(rows, str, key_id, api, callback)
             });
         

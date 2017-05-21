@@ -14,6 +14,7 @@ function formatData(data) {
 
     for (var index in data.statuses) {
         var tweetOri = data.statuses[index];
+
         var tweet = {
             name:tweetOri.user.name, 
             icon:tweetOri.user.profile_image_url, 
@@ -22,10 +23,16 @@ function formatData(data) {
             time: Statistics.getTime(tweetOri.created_at), 
             link_id:tweetOri.id_str, 
             text:tweetOri.text,
-            coordinates1:tweetOri.geo.coordinates[0],
-            coordinates2:tweetOri.geo.coordinates[1],
             tweet_id:tweetOri.id
         };
+        console.log(tweetOri.geo)
+        if (tweetOri.geo != null) {
+            tweet.coordinates1=tweetOri.geo.coordinates[0]
+            tweet.coordinates2=tweetOri.geo.coordinates[1]
+        } else {
+            tweet.coordinates1=null
+            tweet.coordinates2=null   
+        }
         tweets[index] = tweet;
     }
     console.log('format ' + tweets.length + ' tweets')
