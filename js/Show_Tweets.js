@@ -1,4 +1,8 @@
-
+/**
+ * Create userProFile block
+ * @param  {Array} Array contains user's info
+ * @param  {Array} Array contains keywords' info
+ */
 function init_UserProFile_Table (User, keywords) {
 
 	var html = '<idv border=0>';
@@ -34,6 +38,10 @@ function init_UserProFile_Table (User, keywords) {
 	Chart_Opacity_0();
 }
 
+/**
+ * Create tweets block showing all tweets
+ * @param  {Array} Array contains tweets' info
+ */
 function init_Tweets_Table (twit) {
 
 	if(twit.length == 0) {

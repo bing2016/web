@@ -1,3 +1,7 @@
+/**
+ * Get today's date and do count for getting days
+ * @param {Int} A number to do count
+ */
 function GetDateStr(AddDayCount) { 
 	var dd = new Date(); 
 	dd.setDate(dd.getDate()+AddDayCount);
@@ -10,10 +14,11 @@ function GetDateStr(AddDayCount) {
 	return y+"-"+m+"-"+d; 
 } 
 
-
+/**
+ * Count tweets' statistic data and create chart by Chart.js
+ * @param  {Array} Array contains tweets' satistic data
+ */
 function initChart(statistics) {
-
-
 
 	var day1 = GetDateStr(0);
 	var day2 = GetDateStr(-1);

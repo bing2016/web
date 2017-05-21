@@ -138,6 +138,11 @@
 		
 		<script type="text/javascript">
 
+			/**
+			 * Ajax form to post data to server
+			 * @param {String} the url to do post to the server
+			 * @param {JSON} data send to server. Contains the qeury tweets information
+			 */
 			function Send_Tweets_Query(url, data) {
 				$.ajax({
 					url: 'http://127.0.0.1:3000/' + url,
@@ -163,6 +168,11 @@
 				});
 			}
 
+			/**
+			 * Ajax form to post data to server
+			 * @param {String} the url to do post to the server
+			 * @param {JSON} data send to server. Contains the qeury profile information
+			 */
 			function Send_Author_Query(url, data) {
 				$.ajax({
 					url: 'http://127.0.0.1:3000/' + url,
@@ -197,6 +207,10 @@
 
 			}
 
+			/**
+			 * pack form's data into JSON type
+			 * @return {JSON} myForm's data
+			 */
 			$.fn.serializeObject = function () {
 				var o = {};
 				var a = this.serializeArray();
@@ -213,16 +227,25 @@
 				return o;
 			};
 
+			/**
+			 * Get myForm's info, add url, then send to method Send_Tweets_Query
+			 */
 			function Query_Tweets() {
 				var form = document.getElementById('myForm');
 				Send_Tweets_Query('postFile.html', JSON.stringify($('form').serializeObject()));
 			}	
 
+			/**
+			 * Get myForm's info, add url, then send to method Send_Author_Query
+			 */
 			function Query_Author() {
 				var form = document.getElementById('myForm');
 				Send_Author_Query('postFile11.html', JSON.stringify($('form').serializeObject()));
 			}
 
+			/**
+			 * Get myForm's infomation, check for propery input then use method to do post
+			 */
 			function Query_Author_Tips() {
 				var form = document.getElementById('myForm');
 				var Query_Author_Button = $('form').serializeObject().query;
@@ -247,6 +270,9 @@
 			var Query_Author_Button = document.getElementById('Query_Author_Button');
 			Query_Author_Button.onclick = Query_Author_Tips;
 
+			/**
+			 * Mehtod to show/close tip on the main interface by click
+			 */
 			$('.Tip_Link').click(function(){
 				$('div.Tip_Alert').slideToggle();
 				if($(this).html()=='Tip'){

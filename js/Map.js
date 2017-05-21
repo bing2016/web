@@ -1,3 +1,7 @@
+/**
+ * Create a Map by using Google Map API and adding marks
+ * @param  {Array} 
+ */
 function create_Map(Tweets){
 
 	var mapType = google.maps.MapTypeId.ROADMAP;
